@@ -13,6 +13,18 @@
 # define WIDTH			1920
 # define HEIGHT 		1080
 
+typedef struct s_color
+{
+	int start_color;
+	int end_color;
+	int r_s;
+	int r_e;
+	int g_s;
+	int g_e;
+	int b_s;
+	int b_e;
+
+}			t_color;
 typedef struct s_points
 {
 	int x0;
@@ -55,6 +67,7 @@ typedef struct s_data
 	int				zoom;
 	t_map			map;
 	t_point			point;
+	t_color			color;
 }			t_data;
 
 #endif

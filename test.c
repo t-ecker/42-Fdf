@@ -1,32 +1,43 @@
 #include "fdf.h"
 
-int handle_input(int key_pressed, t_data *data)
-{
-	if (key_pressed == 53)
-	{
-		mlx_destroy_window(data->mlx, data->mlx_win);
-		exit(1);
-	}
-	else
-		printf("key %d pressed\n", key_pressed);
-	return (0);
-}
-
-
-
 int handle_close(t_data *data)
 {
     mlx_destroy_window(data->mlx, data->mlx_win);
     exit(0);
 }
 
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+int handle_input(int key_pressed, t_data *data)
 {
-	char	*dst;
-
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-	*(unsigned int*)dst = color;
+	if (key_pressed == 53)
+		handle_close(data);
+	else
+		printf("key %d pressed\n", key_pressed);
+	return (0);
 }
+void print_error_exit(char *str)
+{
+	perror(str);
+    exit(1);
+}
+
+int ft_abs(int n)
+{
+    if (n < 0)
+        return -n;
+    else
+        return n;
+}
+
+
+void my_mlx_pixel_put(t_data *data, int x, int y, int color)
+{
+    if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)
+    {
+        char *dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
+        *(unsigned int *)dst = color;
+    }
+}
+
 
 int	get_size(char **array)
 {
@@ -69,6 +80,13 @@ void find_min_max_z(t_data *data)
         y++;
     }
 }
+
+void init_values(t_data *data)
+{
+	data->zoom = 20;
+	data->color.start_color = 0x00E9F0;
+	data->color.end_color = 0xFF45A2;
+}
 void print_background(t_data *data)
 {
 	int i;
@@ -80,7 +98,7 @@ void print_background(t_data *data)
 		j = 0;
 		while (j < WIDTH)
 		{
-			my_mlx_pixel_put(data, j, i, 0x8C8C8C); // Background color
+			my_mlx_pixel_put(data, j, i, 0x424242);
 			j++;
 		}
 		i++;
@@ -115,10 +133,8 @@ void init_z(t_data *data, char **argv)
 	char **split;
 
     fd = open(argv[1], O_RDONLY);
-    if (fd < 0) {
-        perror("Error opening file");
-        exit(1);
-    }
+    if (fd < 0)
+		print_error_exit("Error opening file");
 
     i = 0;
 	line = get_next_line(fd);
@@ -128,13 +144,12 @@ void init_z(t_data *data, char **argv)
         data->map.x = get_size(split);
 
         data->map.z[i] = (int *)malloc(data->map.x * sizeof(int));
-        if (!data->map.z[i]) {
-            perror("Error allocating memory for map.z row");
-            exit(1);
-        }
+        if (!data->map.z[i])
+			print_error_exit("Error allocating memory for map.z row");
 
         j = 0;
-        while (j < data->map.x) {
+        while (j < data->map.x)
+		{
             data->map.z[i][j] = ft_atoi(split[j]);
             j++;
         }
@@ -159,20 +174,17 @@ void process_map(t_data *data, char **argv)
     data->map.y = 0;
 
     fd = open(argv[1], O_RDONLY);
-    if (fd < 0) {
-        perror("Error opening file");
-        exit(1);
-    }
-    while ((line = get_next_line(fd)) != NULL) {
+    if (fd < 0)
+		print_error_exit("Error opening file");
+    while ((line = get_next_line(fd)) != NULL)
+	{
         data->map.y++;
         free(line);
     }
     close(fd);
     data->map.z = (int **)malloc(data->map.y * sizeof(int *));
-    if (!data->map.z) {
-        perror("Error allocating memory for map.z");
-        exit(1);
-    }
+    if (!data->map.z)
+		print_error_exit("Error allocating memory for map.z");
 	init_z(data, argv);
 }
 
@@ -186,10 +198,10 @@ void draw_line(t_data *data, int color)
 	
 	line.dy = data->point.y1 - data->point.y0;
 	line.dx = data->point.x1 - data->point.x0;
-    if (abs(line.dx) > abs(line.dy))
-        line.steps = abs(line.dx);
+    if (ft_abs(line.dx) > ft_abs(line.dy))
+        line.steps = ft_abs(line.dx);
     else
-        line.steps = abs(line.dy);
+        line.steps = ft_abs(line.dy);
     
     line.x_inc = (float)line.dx / line.steps;
     line.y_inc = (float)line.dy / line.steps;
@@ -217,27 +229,65 @@ void isometric(int *x, int *y, int z, t_data *data)
     *x = (prev_x - prev_y) * cos(0.523599) + data->offset_x; // 0.523599 radians = 30 degrees
     *y = (prev_x + prev_y) * sin(0.523599) - z + data->offset_y;
 }
+
+int calc_color(t_data *data, float t)
+{
+    int r;
+    int g;
+    int b;
+
+    data->color.r_s = (data->color.start_color >> 16) & 0xFF;
+    data->color.g_s = (data->color.start_color >> 8) & 0xFF;
+    data->color.b_s = data->color.start_color & 0xFF;
+
+    data->color.r_e = (data->color.end_color >> 16) & 0xFF;
+    data->color.g_e = (data->color.end_color >> 8) & 0xFF;
+    data->color.b_e = data->color.end_color & 0xFF;
+
+	r = data->color.r_s + t * (data->color.r_e - data->color.r_s);
+	g = data->color.g_s + t * (data->color.g_e - data->color.g_s);
+	b = data->color.b_s + t * (data->color.b_e - data->color.b_s);
+
+    return ((r << 16) | (g << 8) | b);
+}
+
+int calc_perc_color(t_data *data, int current_z, int neighbor_z, int b)
+{
+
+    int range;
+    float t;
+	int z;
+
+	if(b == 1)
+		z = (current_z + neighbor_z) / 2;
+	else
+		z = current_z;
+	
+	range = data->map.max_z - data->map.min_z;
+	t = (float)(z - data->map.min_z) / range;
+
+    return (calc_color(data, t));
+}
+
 int get_color(t_data *data, int x, int y, int b)
 {
-	if (b == 1)
-	{
-		if ((data->map.z[y][x] - data->map.z[y][x + 1]) != 0)
-			return(0xD03DF8);
-		else if (data->map.z[y][x] == data->map.max_z)
-			return(0xF83D8C);
-		else
-			return(0xF0F0F0);
-	}
-	else
-	{
-		if ((data->map.z[y][x] - data->map.z[y + 1][x]) != 0)
-			return(0xD03DF8);
-		else if (data->map.z[y][x] == data->map.max_z)
-			return(0xF83D8C);
-		else
-			return(0xF0F0F0);
-	}
+    int current_z;
+    int neighbor_z;
+
+	current_z = data->map.z[y][x];
+    if (b == 1)
+        neighbor_z = data->map.z[y][x + 1];
+    else
+        neighbor_z = data->map.z[y + 1][x];
+
+    if (current_z == data->map.min_z && neighbor_z == current_z)
+        return(0xdfdfde);
+    else if (current_z != neighbor_z)
+		return calc_perc_color(data, current_z, neighbor_z, 1);
+    else
+        return calc_perc_color(data, current_z, neighbor_z, 0);
 }
+
 
 void draw_map(t_data *data)
 {
@@ -279,7 +329,7 @@ void draw_map(t_data *data)
 
 int handle_mouse_scroll(int button, int x, int y, t_data *data)
 {
-    if (button == 4 && data->zoom > 8)
+    if (button == 4 && data->zoom > 5)
     {
         data->zoom -= 1;
     }
@@ -287,7 +337,7 @@ int handle_mouse_scroll(int button, int x, int y, t_data *data)
     {
         data->zoom += 1;
     }
-
+	// printf("%i\n", data->zoom);
     mlx_clear_window(data->mlx, data->mlx_win);
     print_background(data);
     draw_map(data);
@@ -302,14 +352,11 @@ int main(int argc, char *argv[])
     t_data data;
 
     if (argc != 2)
-	{
-        fprintf(stderr, "Usage: %s <file>\n", argv[0]);
-        return (1);
-    }
+		print_error_exit("wrong arguments");
 
     data.mlx = mlx_init();
     if (data.mlx == NULL)
-        return (1);
+        print_error_exit("mlx_init failed");
 
     data.mlx_win = mlx_new_window(data.mlx, WIDTH, HEIGHT, "fdf_window");
     if (data.mlx_win == NULL)
@@ -319,11 +366,14 @@ int main(int argc, char *argv[])
     }
 
     data.img = mlx_new_image(data.mlx, WIDTH, HEIGHT);
+	if (data.mlx == NULL)
+		print_error_exit("mlx_new_window failed");
     data.addr = mlx_get_data_addr(data.img, &data.bits_per_pixel, &data.line_length, &data.endian);
 
     process_map(&data, argv);
    
-	data.zoom = 20;
+	init_values(&data);
+
 	find_min_max_z(&data);
 	set_offset(&data);
 
