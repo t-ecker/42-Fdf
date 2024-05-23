@@ -2,7 +2,21 @@
 
 int handle_close(t_data *data)
 {
-    mlx_destroy_window(data->mlx, data->mlx_win);
+    int i;
+    if (data->mlx_win)
+        mlx_destroy_window(data->mlx, data->mlx_win);
+    if (data->img)
+        mlx_destroy_image(data->mlx, data->img);
+    if (data->map.z)
+    {
+        i = 0;
+        while (i < data->map.y)
+        {
+            free(data->map.z[i]);
+            i++;
+        }
+        free(data->map.z);
+    }
     exit(0);
 }
 
@@ -14,8 +28,24 @@ int handle_input(int key_pressed, t_data *data)
 		printf("key %d pressed\n", key_pressed);
 	return (0);
 }
-void print_error_exit(char *str)
+void print_error_exit(char *str, t_data *data)
 {
+    int i;
+
+    if (data->mlx_win)
+        mlx_destroy_window(data->mlx, data->mlx_win);
+    if (data->img)
+        mlx_destroy_image(data->mlx, data->img);
+    if (data->map.z)
+    {
+        i = 0;
+        while (i < data->map.y)
+        {
+            free(data->map.z[i]);
+            i++;
+        }
+        free(data->map.z);
+    }
 	perror(str);
     exit(1);
 }
@@ -23,9 +53,9 @@ void print_error_exit(char *str)
 int ft_abs(int n)
 {
     if (n < 0)
-        return -n;
+        return (-n);
     else
-        return n;
+        return (n);
 }
 
 
@@ -38,6 +68,44 @@ void my_mlx_pixel_put(t_data *data, int x, int y, int color)
     }
 }
 
+int ft_is_format(char *str, char *format)
+{
+    if (ft_strnstr(str, format, ft_strlen(str)) == NULL)
+        return (0);
+    return (1);
+}
+
+int	ft_is_readable(char *file)
+{
+	int	fd;
+	int	res;
+
+	fd = open(file, O_RDONLY);
+	if (read(fd, 0, 0) < 0)
+		res = 0;
+	else
+		res = 1;
+	close(fd);
+	return (res);
+}
+void	check_args(int argc, char **argv)
+{
+	if (argc != 2)
+    {
+		perror("Wrong arguments");
+        exit(1);
+    }
+	else if (ft_is_format(argv[1], ".fdf") == 0)
+    {
+		perror("Wrong format");
+        exit(1);
+    }
+	else if (ft_is_readable(argv[1]) == 0)
+    {
+		perror("Read Error");
+        exit(1);
+    }
+}
 
 int	get_size(char **array)
 {
@@ -51,8 +119,7 @@ int	get_size(char **array)
 void freeDoubleArray(char **array)
 {
     int i = 0;
-	int size = get_size(array);
-    while (i < size)
+    while (array[i])
 	{
         free(array[i]);
         i++;
@@ -83,7 +150,7 @@ void find_min_max_z(t_data *data)
 
 void init_values(t_data *data)
 {
-	data->zoom = 20;
+	data->zoom = 1;
 	data->color.start_color = 0x00E9F0;
 	data->color.end_color = 0xFF45A2;
 }
@@ -134,7 +201,7 @@ void init_z(t_data *data, char **argv)
 
     fd = open(argv[1], O_RDONLY);
     if (fd < 0)
-		print_error_exit("Error opening file");
+		print_error_exit("Error opening file", data);
 
     i = 0;
 	line = get_next_line(fd);
@@ -145,7 +212,7 @@ void init_z(t_data *data, char **argv)
 
         data->map.z[i] = (int *)malloc(data->map.x * sizeof(int));
         if (!data->map.z[i])
-			print_error_exit("Error allocating memory for map.z row");
+			print_error_exit("Error allocating memory for map.z row", data);
 
         j = 0;
         while (j < data->map.x)
@@ -175,7 +242,7 @@ void process_map(t_data *data, char **argv)
 
     fd = open(argv[1], O_RDONLY);
     if (fd < 0)
-		print_error_exit("Error opening file");
+		print_error_exit("Error opening file", data);
     while ((line = get_next_line(fd)) != NULL)
 	{
         data->map.y++;
@@ -184,7 +251,7 @@ void process_map(t_data *data, char **argv)
     close(fd);
     data->map.z = (int **)malloc(data->map.y * sizeof(int *));
     if (!data->map.z)
-		print_error_exit("Error allocating memory for map.z");
+		print_error_exit("Error allocating memory for map.z", data);
 	init_z(data, argv);
 }
 
@@ -329,15 +396,10 @@ void draw_map(t_data *data)
 
 int handle_mouse_scroll(int button, int x, int y, t_data *data)
 {
-    if (button == 4 && data->zoom > 5)
-    {
+    if (button == 4 && data->zoom > 1)
         data->zoom -= 1;
-    }
     else if (button == 5 && data->zoom < 200)
-    {
         data->zoom += 1;
-    }
-	// printf("%i\n", data->zoom);
     mlx_clear_window(data->mlx, data->mlx_win);
     print_background(data);
     draw_map(data);
@@ -351,29 +413,25 @@ int main(int argc, char *argv[])
 {
     t_data data;
 
-    if (argc != 2)
-		print_error_exit("wrong arguments");
+    check_args(argc, argv);
 
     data.mlx = mlx_init();
     if (data.mlx == NULL)
-        print_error_exit("mlx_init failed");
+        print_error_exit("mlx_init failed", &data);
 
     data.mlx_win = mlx_new_window(data.mlx, WIDTH, HEIGHT, "fdf_window");
     if (data.mlx_win == NULL)
-	{
-        free(data.mlx_win);
-        return (1);
-    }
+        print_error_exit("mlx_new_window failed", &data);
 
     data.img = mlx_new_image(data.mlx, WIDTH, HEIGHT);
-	if (data.mlx == NULL)
-		print_error_exit("mlx_new_window failed");
+	if (data.img == NULL)
+		print_error_exit("mlx_new_image failed", &data);
+
     data.addr = mlx_get_data_addr(data.img, &data.bits_per_pixel, &data.line_length, &data.endian);
 
     process_map(&data, argv);
    
 	init_values(&data);
-
 	find_min_max_z(&data);
 	set_offset(&data);
 
@@ -388,5 +446,6 @@ int main(int argc, char *argv[])
     mlx_hook(data.mlx_win, 5, 0, handle_mouse_scroll, &data);
     mlx_loop(data.mlx);
 
+    handle_close(&data);
     return (0);
 }
