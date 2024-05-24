@@ -20,14 +20,7 @@ int handle_close(t_data *data)
     exit(0);
 }
 
-int handle_input(int key_pressed, t_data *data)
-{
-	if (key_pressed == 53)
-		handle_close(data);
-	else
-		printf("key %d pressed\n", key_pressed);
-	return (0);
-}
+
 void print_error_exit(char *str, t_data *data)
 {
     int i;
@@ -347,9 +340,9 @@ int get_color(t_data *data, int x, int y, int b)
     else
         neighbor_z = data->map.z[y + 1][x];
 
-    if (current_z == data->map.min_z && neighbor_z == current_z)
-        return(0xdfdfde);
-    else if (current_z != neighbor_z)
+    // if (current_z == data->map.min_z && neighbor_z == current_z)
+    //     return(0xdfdfde);
+    if (current_z != neighbor_z)
 		return calc_perc_color(data, current_z, neighbor_z, 1);
     else
         return calc_perc_color(data, current_z, neighbor_z, 0);
@@ -394,58 +387,92 @@ void draw_map(t_data *data)
     }
 }
 
-int handle_mouse_scroll(int button, int x, int y, t_data *data)
+void draw(t_data *data)
 {
-    if (button == 4 && data->zoom > 1)
-        data->zoom -= 1;
-    else if (button == 5 && data->zoom < 200)
-        data->zoom += 1;
     mlx_clear_window(data->mlx, data->mlx_win);
     print_background(data);
     draw_map(data);
     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img, 0, 0);
+}
 
+int key_press(int key, t_data *data)
+{
+    if (key == 53)
+        handle_close(data);
+    else if (key == 123 || key == 124 || key == 125 || key == 126)
+    {
+        if (key == 123)
+            data->offset_x += 50;
+        else if (key == 124)
+            data->offset_x -= 50;
+        else if (key == 125)
+            data->offset_y -= 50;
+        else if (key == 126)
+            data->offset_y += 50;
+
+    }
+    else if (key == 24)
+        data->zoom += 1;
+    else if (key == 27)
+        data->zoom -= 1;
+    draw(data); 
     return (0);
 }
 
+
+int handle_mouse_scroll(int button, int x, int y, t_data *data)
+{
+    if (button == 4 && data->zoom > 2)
+        data->zoom -= 1;
+    else if (button == 5 && data->zoom < 200)
+        data->zoom += 1;
+    draw(data);
+
+    return (0);
+}
+void init_data(t_data *data, char **argv)
+{
+	data->mlx = NULL;
+    data->mlx_win = NULL;
+    data->img = NULL;
+    data->addr = NULL;
+
+    data->mlx = mlx_init();
+    if (data->mlx == NULL)
+        print_error_exit("mlx_init failed", data);
+
+    data->mlx_win = mlx_new_window(data->mlx, WIDTH, HEIGHT, "fdf");
+    if (data->mlx_win == NULL)
+        print_error_exit("mlx_new_window failed", data);
+
+    data->img = mlx_new_image(data->mlx, WIDTH, HEIGHT);
+	if (data->img == NULL)
+		print_error_exit("mlx_new_image failed", data);
+
+    data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
+    if (data->addr == NULL)
+		print_error_exit("mlx_get_data_addr failed", data);
+
+    process_map(data, argv);
+    init_values(data);
+	find_min_max_z(data);
+	set_offset(data);
+}
 
 int main(int argc, char *argv[])
 {
     t_data data;
 
     check_args(argc, argv);
+    init_data(&data, argv);
 
-    data.mlx = mlx_init();
-    if (data.mlx == NULL)
-        print_error_exit("mlx_init failed", &data);
+	draw(&data);
 
-    data.mlx_win = mlx_new_window(data.mlx, WIDTH, HEIGHT, "fdf_window");
-    if (data.mlx_win == NULL)
-        print_error_exit("mlx_new_window failed", &data);
-
-    data.img = mlx_new_image(data.mlx, WIDTH, HEIGHT);
-	if (data.img == NULL)
-		print_error_exit("mlx_new_image failed", &data);
-
-    data.addr = mlx_get_data_addr(data.img, &data.bits_per_pixel, &data.line_length, &data.endian);
-
-    process_map(&data, argv);
-   
-	init_values(&data);
-	find_min_max_z(&data);
-	set_offset(&data);
-
-	print_background(&data);
-    draw_map(&data);
-
-    mlx_put_image_to_window(data.mlx, data.mlx_win, data.img, 0, 0);
-
-    mlx_key_hook(data.mlx_win, &handle_input, &data);
-	mlx_hook(data.mlx_win, 17, 0, &handle_close, &data);
+    mlx_hook(data.mlx_win, 2, 1L << 0, key_press, &data);
+	mlx_hook(data.mlx_win, 17, 0, handle_close, &data);
 	mlx_hook(data.mlx_win, 4, 0, handle_mouse_scroll, &data);
     mlx_hook(data.mlx_win, 5, 0, handle_mouse_scroll, &data);
     mlx_loop(data.mlx);
 
-    handle_close(&data);
     return (0);
 }
