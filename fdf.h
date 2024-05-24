@@ -23,6 +23,7 @@ typedef struct s_color
 	int g_e;
 	int b_s;
 	int b_e;
+	int **map_color;
 
 }			t_color;
 typedef struct s_points

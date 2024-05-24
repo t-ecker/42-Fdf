@@ -17,6 +17,16 @@ int handle_close(t_data *data)
         }
         free(data->map.z);
     }
+    if (data->color.map_color)
+    {
+        i = 0;
+        while (i < data->map.y)
+        {
+            free(data->color.map_color[i]);
+            i++;
+        }
+        free(data->color.map_color);
+    }
     exit(0);
 }
 
@@ -38,6 +48,16 @@ void print_error_exit(char *str, t_data *data)
             i++;
         }
         free(data->map.z);
+    }
+    if (data->color.map_color)
+    {
+        i = 0;
+        while (i < data->map.y)
+        {
+            free(data->color.map_color[i]);
+            i++;
+        }
+        free(data->color.map_color);
     }
 	perror(str);
     exit(1);
@@ -182,7 +202,55 @@ void set_offset(t_data *data)
 	data->offset_x = screen_center_x - content_width / 2;
 	data->offset_y = screen_center_y - content_height / 2;
 }
+int ft_xtoi(char *str)
+{
+    int i;
+    int num;
 
+    num = 0;
+    i = 0;
+    if (str[0] == '0' && (str[1] == 'x' || str[1] == 'X'))
+     i = 2;
+     
+    while (str[i])
+    {
+        num *= 16;
+        if (str[i] >= '0' && str[i] <= '9')
+            num += str[i] - '0';
+        else if (str[i] >= 'A' && str[i] <= 'F')
+            num += str[i] - 'A' + 10;
+        else if (str[i] >= 'a' && str[i] <= 'f')
+            num += str[i] - 'a' + 10;
+        else
+        {
+            printf("Invalid hexadecimal character: %c\n", str[i]);
+            return -1;
+        }
+        i++;
+    }
+    return (num);
+}
+
+int get_color_from_map(t_data *data, char *str, int j, int i)
+{
+    char *c;
+    data->color.map_color[i][j] = 0;
+    if (ft_strchr(str, ',') != NULL)
+    {
+        c = ft_substr(str, (ft_strchr(str, ',') + 1 - str), ft_strlen(str));
+        if (c == NULL)
+            print_error_exit("reading color failed", data);
+
+        printf("str: %s\n", c);
+        data->color.map_color[i][j] = ft_xtoi(c);
+        printf("num :%i\n", data->color.map_color[i][j]);
+
+        free(c);
+    }
+    
+    data->map.z[i][j] = ft_atoi(str);
+    return (j + 1);
+}
 
 void init_z(t_data *data, char **argv)
 {
@@ -195,30 +263,30 @@ void init_z(t_data *data, char **argv)
     fd = open(argv[1], O_RDONLY);
     if (fd < 0)
 		print_error_exit("Error opening file", data);
-
     i = 0;
 	line = get_next_line(fd);
     while (line != NULL)
 	{
         split = ft_split(line, ' ');
         data->map.x = get_size(split);
-
         data->map.z[i] = (int *)malloc(data->map.x * sizeof(int));
         if (!data->map.z[i])
-			print_error_exit("Error allocating memory for map.z row", data);
-
+            print_error_exit("Error allocating memory for map.z row", data);
+        data->color.map_color[i] = (int *)malloc(data->map.x * sizeof(int));
+        if (!data->color.map_color[i])
+			print_error_exit("Error allocating memory for color row", data);
         j = 0;
         while (j < data->map.x)
 		{
-            data->map.z[i][j] = ft_atoi(split[j]);
-            j++;
+            j = get_color_from_map(data, split[j], j, i);
         }
-
         free(line);
         freeDoubleArray(split);
         i++;
 		line = get_next_line(fd);
     }
+    if (line)
+        free(line);
     close(fd);
 }
 
@@ -245,6 +313,9 @@ void process_map(t_data *data, char **argv)
     data->map.z = (int **)malloc(data->map.y * sizeof(int *));
     if (!data->map.z)
 		print_error_exit("Error allocating memory for map.z", data);
+    data->color.map_color = (int **)malloc(data->map.y * sizeof(int *));
+    if (!data->color.map_color)
+        print_error_exit("Error allocating memory for color", data);
 	init_z(data, argv);
 }
 
@@ -271,7 +342,7 @@ void draw_line(t_data *data, int color)
 
     while (i <= line.steps)
 	{
-        my_mlx_pixel_put(data, round(line.x), round(line.y), color);
+        my_mlx_pixel_put(data, (int)round(line.x), (int)round(line.y), color);
         line.x += line.x_inc;
         line.y += line.y_inc;
 		i++;
@@ -287,7 +358,7 @@ void isometric(int *x, int *y, int z, t_data *data)
 	prev_x = *x;
 	prev_y = *y;
     *x = (prev_x - prev_y) * cos(0.523599) + data->offset_x; // 0.523599 radians = 30 degrees
-    *y = (prev_x + prev_y) * sin(0.523599) - z + data->offset_y;
+    *y = (prev_x + prev_y) * sin(0.523599) - (2 * z) + data->offset_y;
 }
 
 int calc_color(t_data *data, float t)
@@ -367,7 +438,10 @@ void draw_map(t_data *data)
 
             if (x < data->map.x - 1)
             {
-				color = get_color(data, x, y, 1);
+                if (data->color.map_color[y][x] != 0)
+				    color = data->color.map_color[y][x];
+                else
+                    color = get_color(data, x, y, 1);
                 data->point.x1 = (x + 1) * data->zoom;
                 data->point.y1 = y * data->zoom;
                 isometric(&data->point.x1, &data->point.y1, data->map.z[y][x + 1], data);
@@ -375,7 +449,10 @@ void draw_map(t_data *data)
             }
             if (y < data->map.y - 1)
             {
-				color = get_color(data, x, y, 0);
+				if (data->color.map_color[y][x] != 0)
+				    color = data->color.map_color[y][x];
+                else
+                    color = get_color(data, x, y, 0);
                 data->point.x1 = x * data->zoom;
                 data->point.y1 = (y + 1) * data->zoom;
                 isometric(&data->point.x1, &data->point.y1, data->map.z[y + 1][x], data);
@@ -390,9 +467,13 @@ void draw_map(t_data *data)
 void draw(t_data *data)
 {
     mlx_clear_window(data->mlx, data->mlx_win);
+    write(1, "1\n", 2);
     print_background(data);
+    write(1, "2\n", 2);
     draw_map(data);
+    write(1, "3\n", 2);
     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img, 0, 0);
+    write(1, "4\n", 2);
 }
 
 int key_press(int key, t_data *data)
@@ -411,11 +492,11 @@ int key_press(int key, t_data *data)
             data->offset_y += 50;
 
     }
-    else if (key == 24)
+    else if (key == 24 && data->zoom < 200)
         data->zoom += 1;
-    else if (key == 27)
+    else if (key == 27 && data->zoom > 2)
         data->zoom -= 1;
-    draw(data); 
+    draw(data);
     return (0);
 }
 
@@ -468,7 +549,7 @@ int main(int argc, char *argv[])
 
 	draw(&data);
 
-    mlx_hook(data.mlx_win, 2, 1L << 0, key_press, &data);
+    mlx_hook(data.mlx_win, 2, 0, key_press, &data);
 	mlx_hook(data.mlx_win, 17, 0, handle_close, &data);
 	mlx_hook(data.mlx_win, 4, 0, handle_mouse_scroll, &data);
     mlx_hook(data.mlx_win, 5, 0, handle_mouse_scroll, &data);
