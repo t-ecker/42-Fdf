@@ -12,7 +12,8 @@ int handle_close(t_data *data)
         i = 0;
         while (i < data->map.y)
         {
-            free(data->map.z[i]);
+            if (data->map.z[i])
+                free(data->map.z[i]);
             i++;
         }
         free(data->map.z);
@@ -22,45 +23,19 @@ int handle_close(t_data *data)
         i = 0;
         while (i < data->map.y)
         {
-            free(data->color.map_color[i]);
+            if (data->color.map_color[i])
+                free(data->color.map_color[i]);
             i++;
         }
         free(data->color.map_color);
     }
-    exit(0);
+    exit(1);
 }
-
 
 void print_error_exit(char *str, t_data *data)
 {
-    int i;
-
-    if (data->mlx_win)
-        mlx_destroy_window(data->mlx, data->mlx_win);
-    if (data->img)
-        mlx_destroy_image(data->mlx, data->img);
-    if (data->map.z)
-    {
-        i = 0;
-        while (i < data->map.y)
-        {
-            free(data->map.z[i]);
-            i++;
-        }
-        free(data->map.z);
-    }
-    if (data->color.map_color)
-    {
-        i = 0;
-        while (i < data->map.y)
-        {
-            free(data->color.map_color[i]);
-            i++;
-        }
-        free(data->color.map_color);
-    }
 	perror(str);
-    exit(1);
+    handle_close(data);
 }
 
 int ft_abs(int n)
@@ -202,7 +177,7 @@ void set_offset(t_data *data)
 	data->offset_x = screen_center_x - content_width / 2;
 	data->offset_y = screen_center_y - content_height / 2;
 }
-int ft_xtoi(char *str)
+int ft_xtoi(char *str, t_data *data)
 {
     int i;
     int num;
@@ -210,8 +185,7 @@ int ft_xtoi(char *str)
     num = 0;
     i = 0;
     if (str[0] == '0' && (str[1] == 'x' || str[1] == 'X'))
-     i = 2;
-     
+        i = 2;
     while (str[i])
     {
         num *= 16;
@@ -221,33 +195,32 @@ int ft_xtoi(char *str)
             num += str[i] - 'A' + 10;
         else if (str[i] >= 'a' && str[i] <= 'f')
             num += str[i] - 'a' + 10;
-        else
-        {
-            printf("Invalid hexadecimal character: %c\n", str[i]);
-            return -1;
-        }
+        else if (str[i] != '\n')
+            print_error_exit("Invalid hexadecimal character", data);
         i++;
     }
     return (num);
 }
 
-int get_color_from_map(t_data *data, char *str, int j, int i)
+int get_info_from_map(t_data *data, char *str, int j, int i)
 {
     char *c;
+    int len;
+    int start_pos;
+
     data->color.map_color[i][j] = 0;
     if (ft_strchr(str, ',') != NULL)
     {
-        c = ft_substr(str, (ft_strchr(str, ',') + 1 - str), ft_strlen(str));
+        start_pos = (ft_strchr(str, ',') + 1 - str);
+        len = ft_strlen(str) - start_pos;
+        if (str[ft_strlen(str) - 1] == '\n')
+            len--;
+        c = ft_substr(str, start_pos, len);
         if (c == NULL)
             print_error_exit("reading color failed", data);
-
-        printf("str: %s\n", c);
-        data->color.map_color[i][j] = ft_xtoi(c);
-        printf("num :%i\n", data->color.map_color[i][j]);
-
+        data->color.map_color[i][j] = ft_xtoi(c, data);
         free(c);
     }
-    
     data->map.z[i][j] = ft_atoi(str);
     return (j + 1);
 }
@@ -268,6 +241,8 @@ void init_z(t_data *data, char **argv)
     while (line != NULL)
 	{
         split = ft_split(line, ' ');
+        if (!split)
+            print_error_exit("split failed", data);
         data->map.x = get_size(split);
         data->map.z[i] = (int *)malloc(data->map.x * sizeof(int));
         if (!data->map.z[i])
@@ -277,16 +252,12 @@ void init_z(t_data *data, char **argv)
 			print_error_exit("Error allocating memory for color row", data);
         j = 0;
         while (j < data->map.x)
-		{
-            j = get_color_from_map(data, split[j], j, i);
-        }
+            j = get_info_from_map(data, split[j], j, i);
         free(line);
         freeDoubleArray(split);
         i++;
 		line = get_next_line(fd);
     }
-    if (line)
-        free(line);
     close(fd);
 }
 
@@ -300,14 +271,15 @@ void process_map(t_data *data, char **argv)
 
     data->map.x = 0;
     data->map.y = 0;
-
     fd = open(argv[1], O_RDONLY);
     if (fd < 0)
 		print_error_exit("Error opening file", data);
-    while ((line = get_next_line(fd)) != NULL)
+    line = get_next_line(fd);
+    while (line != NULL)
 	{
         data->map.y++;
         free(line);
+        line = get_next_line(fd);
     }
     close(fd);
     data->map.z = (int **)malloc(data->map.y * sizeof(int *));
@@ -325,8 +297,6 @@ void draw_line(t_data *data, int color)
 	int i;
 
 	i = 0;
-	
-	
 	line.dy = data->point.y1 - data->point.y0;
 	line.dx = data->point.x1 - data->point.x0;
     if (ft_abs(line.dx) > ft_abs(line.dy))
@@ -403,18 +373,27 @@ int calc_perc_color(t_data *data, int current_z, int neighbor_z, int b)
 int get_color(t_data *data, int x, int y, int b)
 {
     int current_z;
+    int current_col;
     int neighbor_z;
+    int neighbor_col;
 
 	current_z = data->map.z[y][x];
+    current_col = data->color.map_color[y][x];
     if (b == 1)
+    {
         neighbor_z = data->map.z[y][x + 1];
+        neighbor_col = data->color.map_color[y][x + 1];
+    }
     else
+    {
         neighbor_z = data->map.z[y + 1][x];
+        neighbor_col = data->color.map_color[y + 1][x];
+    }
 
-    // if (current_z == data->map.min_z && neighbor_z == current_z)
-    //     return(0xdfdfde);
-    if (current_z != neighbor_z)
+    if (current_z != neighbor_z && (current_col == 0))
 		return calc_perc_color(data, current_z, neighbor_z, 1);
+    else if (current_col != 0 && neighbor_col != 0)
+		return (current_col);
     else
         return calc_perc_color(data, current_z, neighbor_z, 0);
 }
@@ -424,7 +403,6 @@ void draw_map(t_data *data)
 {
     int x;
     int y;
-    int color;
 
     y = 0;
     while (y < data->map.y)
@@ -438,25 +416,17 @@ void draw_map(t_data *data)
 
             if (x < data->map.x - 1)
             {
-                if (data->color.map_color[y][x] != 0)
-				    color = data->color.map_color[y][x];
-                else
-                    color = get_color(data, x, y, 1);
                 data->point.x1 = (x + 1) * data->zoom;
                 data->point.y1 = y * data->zoom;
                 isometric(&data->point.x1, &data->point.y1, data->map.z[y][x + 1], data);
-                draw_line(data, color);
+                draw_line(data, get_color(data, x, y, 1));
             }
             if (y < data->map.y - 1)
             {
-				if (data->color.map_color[y][x] != 0)
-				    color = data->color.map_color[y][x];
-                else
-                    color = get_color(data, x, y, 0);
                 data->point.x1 = x * data->zoom;
                 data->point.y1 = (y + 1) * data->zoom;
                 isometric(&data->point.x1, &data->point.y1, data->map.z[y + 1][x], data);
-                draw_line(data, color);
+                draw_line(data, get_color(data, x, y, 0));
             }
             x++;
         }
@@ -467,13 +437,9 @@ void draw_map(t_data *data)
 void draw(t_data *data)
 {
     mlx_clear_window(data->mlx, data->mlx_win);
-    write(1, "1\n", 2);
     print_background(data);
-    write(1, "2\n", 2);
     draw_map(data);
-    write(1, "3\n", 2);
     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img, 0, 0);
-    write(1, "4\n", 2);
 }
 
 int key_press(int key, t_data *data)
