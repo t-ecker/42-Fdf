@@ -1,48 +1,48 @@
-# Variables
 MLX_DIR     = ./mlx
 MLX         = $(MLX_DIR)/libmlx.a
 FRAMEWORKS  = -framework OpenGL -framework AppKit
 
-LIBFT_DIR = ./libft
-LIBFT = $(LIBFT_DIR)/libft.a
+LIBFT_DIR   = ./libft
+LIBFT       = $(LIBFT_DIR)/libft.a
 
-# Compiler and flags
 CC          = cc
-# CFLAGS      = -Wall -Wextra -Werror
+CFLAGS      = -Wall -Wextra -Werror
+
 LDFLAGS     = $(MLX) $(FRAMEWORKS)
 
-# Source files
-SRC         = test.c
-OBJ         = $(SRC:.c=.o)
+SRC_DIR     = ./src
+OBJ_DIR     = ./obj
+SRC         = $(wildcard $(SRC_DIR)/*.c)
+OBJ         = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC))
 
-# NAME executable
-NAME		= fdf
+NAME        = fdf
 
-# Build rules
 all: $(NAME)
 
 $(NAME): $(OBJ) $(MLX) $(LIBFT)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) $(LIBFT)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ 
 
 $(MLX):
-	make -C $(MLX_DIR)
+	@make -C $(MLX_DIR)
 
 $(LIBFT):
 	@make -C $(LIBFT_DIR)
 
-%.o: %.c
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(OBJ_DIR):
+	mkdir $(OBJ_DIR)
+
 clean:
-	rm -f $(OBJ)
+	rm -rf $(OBJ_DIR)
 	make clean -C $(MLX_DIR)
 	make clean -C $(LIBFT_DIR)
 
-fclean:	clean
+fclean: clean
 	rm -f $(NAME)
 	make fclean -C $(LIBFT_DIR)
 
 re: fclean all
 
-# Phony NAMEs
 .PHONY: all clean
