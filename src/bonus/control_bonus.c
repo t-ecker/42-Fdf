@@ -1,5 +1,27 @@
 #include "../fdf.h"
 
+void	change_color(t_data *data)
+{
+	if (data->color.start_color == 0x00E9F0)
+	{
+		data->color.start_color = 0xFF45A2;
+		data->color.end_color = 0xF5E717;
+	}
+	else
+	{
+		data->color.start_color = 0x00E9F0;
+		data->color.end_color = 0xFF45A2;
+	}
+}
+
+void	change_perspective(t_data *data)
+{
+	if (data->perspective == 1)
+		data->perspective++;
+	else
+		data->perspective--;
+}
+
 int	key_press(int key, t_data *data)
 {
 	if (key == 53)
@@ -19,6 +41,10 @@ int	key_press(int key, t_data *data)
 		data->zoom += 1;
 	else if (key == 27 && data->zoom > 2)
 		data->zoom -= 1;
+	else if (key == 8)
+		change_color(data);
+	else if (key == 35)
+		change_perspective(data);
 	draw(data);
 	return (0);
 }

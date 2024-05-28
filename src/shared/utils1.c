@@ -63,7 +63,7 @@ int	handle_close(t_data *data)
 		mlx_destroy_image(data->mlx, data->img);
 	freedoublearray_int(data->map.z, data);
 	freedoublearray_int(data->color.map_color, data);
-	exit(1);
+	exit(0);
 }
 
 void	print_error_exit(char *str, t_data *data)

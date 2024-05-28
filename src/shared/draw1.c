@@ -30,10 +30,18 @@ void	isometric(int *x, int *y, int z, t_data *data)
 	int	prev_x;
 	int	prev_y;
 
-	prev_x = *x;
-	prev_y = *y;
-	*x = (prev_x - prev_y) * cos(0.523599) + data->offset_x;
-	*y = (prev_x + prev_y) * sin(0.523599) - (2 * z) + data->offset_y;
+	if (data->perspective == 1)
+	{
+		*x += data->offset_x;
+		*y += data->offset_y;
+	}
+	else
+	{
+		prev_x = *x;
+		prev_y = *y;
+		*x = (prev_x - prev_y) * cos(data->rotation) + data->offset_x;
+		*y = (prev_x + prev_y) * sin(data->rotation) - (2 * z) + data->offset_y;
+	}
 }
 
 void	draw_map_operations(int x, int y, t_data *data)

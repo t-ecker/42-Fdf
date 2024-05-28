@@ -52,6 +52,8 @@ int	get_color(t_data *data, int x, int y, int b)
 		neighbor_z = data->map.z[y + 1][x];
 		neighbor_col = data->color.map_color[y + 1][x];
 	}
+	if (data->map.max_z == data->map.min_z)
+		return (data->color.start_color);
 	if (current_z != neighbor_z && (current_col == 0))
 		return (calc_perc_color(data, current_z, neighbor_z, 1));
 	else if (current_col != 0 && neighbor_col != 0)

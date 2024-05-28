@@ -30,6 +30,8 @@ void	init_values(t_data *data)
 	data->color.end_color = 0xFF45A2;
 	data->map.x = 0;
 	data->map.y = 0;
+	data->perspective = 2;
+	data->rotation = 0.523599;
 	data->mlx = NULL;
 	data->mlx_win = NULL;
 	data->img = NULL;

@@ -5,8 +5,8 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <fcntl.h>
-# include "./mlx/mlx.h"
-# include "./Libft/libft.h"
+# include "../mlx/mlx.h"
+# include "../Libft/libft.h"
 # include <math.h>
 
 # define WIDTH			1920
@@ -65,16 +65,21 @@ typedef struct s_data
 	int				offset_x;
 	int				offset_y;
 	int				zoom;
+	int				perspective;
+	float			rotation;
 	t_map			map;
 	t_point			point;
 	t_color			color;
 }			t_data;
 
-// control.c
+// control
 int		handle_mouse_scroll(int button, int x, int y, t_data *data);
 int		key_press(int key, t_data *data);
+void	change_color(t_data *data);
+void	change_perspective(t_data *data);
 
-// other_utils.c
+
+// utils
 int		get_size(char **array);
 void	freedoublearray(char **array);
 void	freedoublearray_int(int **array, t_data *data);
@@ -85,7 +90,7 @@ int		ft_is_format(char *str, char *format);
 int		ft_is_readable(char *file);
 int		ft_xtoi(char *str, t_data *data);
 
-// initialize.c
+// initialize
 void	find_min_max_z(t_data *data);
 void	init_values(t_data *data);
 void	set_offset(t_data *data);
@@ -95,12 +100,12 @@ void	read_map(t_data *data, char **argv);
 void	process_map(t_data *data, char **argv);
 void	init_data(t_data *data, char **argv);
 
-// color.c
+// color
 int		calc_color(t_data *data, float t);
 int		calc_perc_color(t_data *data, int current_z, int neighbor_z, int b);
 int		get_color(t_data *data, int x, int y, int b);
 
-// draw.c
+// draw
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 void	print_background(t_data *data);
 void	draw_line(t_data *data, int color);
