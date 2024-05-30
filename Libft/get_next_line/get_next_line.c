@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 16:55:43 by tecker            #+#    #+#             */
-/*   Updated: 2024/04/09 14:24:05 by tecker           ###   ########.fr       */
+/*   Updated: 2024/05/30 18:15:31 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ char	*find_new_rest(char *c)
 	int		len;
 	char	*new;
 
-	len = ft_strchr(c, '\n') - c;
-	new = ft_substr(c, len + 1, ft_strlen(c));
+	len = ft_strchr_gnl(c, '\n') - c;
+	new = ft_substr_gnl(c, len + 1, ft_strlen_gnl(c));
 	free(c);
 	if (new == NULL)
 		return (NULL);
@@ -32,8 +32,8 @@ char	*search_for_nl(char *c)
 	int		len;
 	char	*new;
 
-	len = ft_strchr(c, '\n') - c;
-	new = ft_substr(c, 0, len + 1);
+	len = ft_strchr_gnl(c, '\n') - c;
+	new = ft_substr_gnl(c, 0, len + 1);
 	if (new == NULL)
 		return (NULL);
 	if (new[0] == '\0')
@@ -50,7 +50,7 @@ char	*read_from_file(int fd, char *rest)
 	if (buffer == NULL)
 		return (free(rest), NULL);
 	bytesread = 1;
-	while (!ft_strchr(rest, '\n') && bytesread != 0)
+	while (!ft_strchr_gnl(rest, '\n') && bytesread != 0)
 	{
 		bytesread = read(fd, buffer, BUFFER_SIZE);
 		if (bytesread == -1)
@@ -59,7 +59,7 @@ char	*read_from_file(int fd, char *rest)
 			return (free(buffer), NULL);
 		}
 		buffer[bytesread] = '\0';
-		rest = ft_strjoin(rest, buffer);
+		rest = ft_strjoin_gnl(rest, buffer);
 		if (rest == NULL)
 			return (free(buffer), NULL);
 	}
@@ -75,7 +75,7 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	if (rest == NULL)
-		rest = ft_strdup("");
+		rest = ft_strdup_gnl("");
 	if (rest == NULL)
 		return (NULL);
 	rest = read_from_file(fd, rest);

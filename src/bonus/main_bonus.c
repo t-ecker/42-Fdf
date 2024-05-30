@@ -25,7 +25,7 @@ int	main(int argc, char *argv[])
 
 	check_args(argc, argv);
 	init_data(&data, argv);
-	draw(&data);
+	draw_start(&data);
 	mlx_hook(data.mlx_win, 2, 0, key_press, &data);
 	mlx_hook(data.mlx_win, 17, 0, handle_close, &data);
 	mlx_hook(data.mlx_win, 4, 0, handle_mouse_scroll, &data);

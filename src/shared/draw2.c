@@ -1,5 +1,14 @@
 #include "../fdf.h"
 
+void	draw_start(t_data *data)
+{
+	while (!all_points_visible(data) && data->zoom > 1)
+		data->zoom--;
+	print_background(data);
+	draw_map(data);
+	mlx_put_image_to_window(data->mlx, data->mlx_win, data->img, 0, 0);
+}
+
 void	draw(t_data *data)
 {
 	mlx_clear_window(data->mlx, data->mlx_win);

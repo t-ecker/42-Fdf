@@ -15,7 +15,7 @@ int	read_z_and_color(t_data *data, char *str, int j, int i)
 			len--;
 		c = ft_substr(str, start_pos, len);
 		if (c == NULL)
-			print_error_exit("reading color failed", data);
+			return (0);
 		data->color.map_color[i][j] = ft_xtoi(c, data);
 		free(c);
 	}
@@ -23,7 +23,7 @@ int	read_z_and_color(t_data *data, char *str, int j, int i)
 	return (j + 1);
 }
 
-void	allocate_map_rows(t_data *data, char *line, int i)
+int	allocate_map_rows(t_data *data, char *line, int i)
 {
 	char	**split;
 	int		j;
@@ -31,17 +31,21 @@ void	allocate_map_rows(t_data *data, char *line, int i)
 	j = 0;
 	split = ft_split(line, ' ');
 	if (!split)
-		print_error_exit("split failed", data);
+		return (1);
 	data->map.x = get_size(split);
 	data->map.z[i] = (int *)malloc(data->map.x * sizeof(int));
 	if (!data->map.z[i])
-		print_error_exit("Error allocating memory for map.z row", data);
+		return (freedoublearray(split), 1);
 	data->color.map_color[i] = (int *)malloc(data->map.x * sizeof(int));
 	if (!data->color.map_color[i])
-		print_error_exit("Error allocating memory for color row", data);
+		return (freedoublearray(split), 1);
 	while (j < data->map.x)
+	{
 		j = read_z_and_color(data, split[j], j, i);
-	freedoublearray(split);
+		if (j == 0)
+			return (freedoublearray(split), 1);
+	}
+	return (freedoublearray(split), 0);
 }
 
 void	read_map(t_data *data, char **argv)
@@ -57,7 +61,11 @@ void	read_map(t_data *data, char **argv)
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
-		allocate_map_rows(data, line, i);
+		if (1 == allocate_map_rows(data, line, i))
+		{
+			free(line);
+			print_error_exit("Read_map failed", data);
+		}
 		free(line);
 		i++;
 		line = get_next_line(fd);
@@ -108,5 +116,4 @@ void	init_data(t_data *data, char **argv)
 		print_error_exit("mlx_get_data_addr failed", data);
 	process_map(data, argv);
 	find_min_max_z(data);
-	set_offset(data);
 }

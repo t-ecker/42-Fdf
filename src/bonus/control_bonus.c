@@ -20,6 +20,7 @@ void	change_perspective(t_data *data)
 		data->perspective++;
 	else
 		data->perspective--;
+	set_offset(data);
 }
 
 int	key_press(int key, t_data *data)
@@ -39,21 +40,20 @@ int	key_press(int key, t_data *data)
 	}
 	else if (key == 24 && data->zoom < 200)
 		data->zoom += 1;
-	else if (key == 27 && data->zoom > 2)
+	else if (key == 27 && data->zoom > 1)
 		data->zoom -= 1;
 	else if (key == 8)
 		change_color(data);
 	else if (key == 35)
 		change_perspective(data);
-	draw(data);
-	return (0);
+	return (draw(data), 0);
 }
 
 int	handle_mouse_scroll(int button, int x, int y, t_data *data)
 {
 	(void)x;
 	(void)y;
-	if (button == 4 && data->zoom > 2)
+	if (button == 4 && data->zoom > 1)
 		data->zoom -= 1;
 	else if (button == 5 && data->zoom < 200)
 		data->zoom += 1;

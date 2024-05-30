@@ -31,30 +31,31 @@ void	isometric(int *x, int *y, int z, t_data *data)
 	int	prev_y;
 
 	if (data->perspective == 1)
-	{
-		*x += data->offset_x;
-		*y += data->offset_y;
-	}
+		return ;
 	else
 	{
 		prev_x = *x;
 		prev_y = *y;
-		*x = (prev_x - prev_y) * cos(data->rotation) + data->offset_x;
-		*y = (prev_x + prev_y) * sin(data->rotation) - (2 * z) + data->offset_y;
+		*x = (prev_x - prev_y) * cos(data->rotation);
+		*y = (prev_x + prev_y) * sin(data->rotation) - (data->height * z);
 	}
 }
 
 void	draw_map_operations(int x, int y, t_data *data)
 {
+	if (x == 0 && y == 0 && data->offset_x == 0)
+		set_offset(data);
 	data->point.x0 = x * data->zoom;
 	data->point.y0 = y * data->zoom;
 	isometric(&data->point.x0, &data->point.y0, data->map.z[y][x], data);
+	add_offset(&data->point.x0, &data->point.y0, data);
 	if (x < data->map.x - 1)
 	{
 		data->point.x1 = (x + 1) * data->zoom;
 		data->point.y1 = y * data->zoom;
 		isometric(&data->point.x1, &data->point.y1,
 			data->map.z[y][x + 1], data);
+		add_offset(&data->point.x1, &data->point.y1, data);
 		draw_line(data, get_color(data, x, y, 1));
 	}
 	if (y < data->map.y - 1)
@@ -63,6 +64,7 @@ void	draw_map_operations(int x, int y, t_data *data)
 		data->point.y1 = (y + 1) * data->zoom;
 		isometric(&data->point.x1, &data->point.y1,
 			data->map.z[y + 1][x], data);
+		add_offset(&data->point.x1, &data->point.y1, data);
 		draw_line(data, get_color(data, x, y, 0));
 	}
 }

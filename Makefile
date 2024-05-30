@@ -20,7 +20,7 @@ OBJ_BONUS   = $(patsubst $(SRC_DIR)/bonus/%.c, $(OBJ_DIR)/%.o, $(SRC_BONUS))
 OBJ_SHARED  = $(patsubst $(SRC_DIR)/shared/%.c, $(OBJ_DIR)/%.o, $(SRC_SHARED))
 
 NAME        = fdf
-NAME_BONUS	= fdf.bonus
+NAME_BONUS	= fdf_bonus
 
 all: $(NAME)
 

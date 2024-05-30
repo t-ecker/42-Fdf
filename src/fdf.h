@@ -8,9 +8,10 @@
 # include "../mlx/mlx.h"
 # include "../Libft/libft.h"
 # include <math.h>
+# include <limits.h>
 
-# define WIDTH			1920
-# define HEIGHT 		1080
+# define WIDTH			1312
+# define HEIGHT 		848
 
 typedef struct s_color
 {
@@ -25,6 +26,15 @@ typedef struct s_color
 	int	**map_color;
 
 }			t_color;
+
+typedef struct s_borders
+{
+	int	max_x;
+	int	max_y;
+	int	min_x;
+	int	min_y;
+}			t_borders;
+
 typedef struct s_points
 {
 	int	x0;
@@ -67,9 +77,11 @@ typedef struct s_data
 	int				zoom;
 	int				perspective;
 	float			rotation;
+	int				height;
 	t_map			map;
 	t_point			point;
 	t_color			color;
+	t_borders		borders;
 }			t_data;
 
 // control
@@ -77,7 +89,6 @@ int		handle_mouse_scroll(int button, int x, int y, t_data *data);
 int		key_press(int key, t_data *data);
 void	change_color(t_data *data);
 void	change_perspective(t_data *data);
-
 
 // utils
 int		get_size(char **array);
@@ -93,9 +104,8 @@ int		ft_xtoi(char *str, t_data *data);
 // initialize
 void	find_min_max_z(t_data *data);
 void	init_values(t_data *data);
-void	set_offset(t_data *data);
 int		read_z_and_color(t_data *data, char *str, int j, int i);
-void	allocate_map_rows(t_data *data, char *line, int i);
+int		allocate_map_rows(t_data *data, char *line, int i);
 void	read_map(t_data *data, char **argv);
 void	process_map(t_data *data, char **argv);
 void	init_data(t_data *data, char **argv);
@@ -113,5 +123,12 @@ void	isometric(int *x, int *y, int z, t_data *data);
 void	draw_map_operations(int x, int y, t_data *data);
 void	draw_map(t_data *data);
 void	draw(t_data *data);
+void	draw_start(t_data *data);
+
+//center
+void	add_offset(int *x, int *y, t_data *data);
+void	get_borders(t_data *data);
+int		all_points_visible(t_data *data);
+void	set_offset(t_data *data);
 
 #endif
