@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   center.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/31 15:20:03 by tecker            #+#    #+#             */
+/*   Updated: 2024/05/31 16:17:40 by tecker           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../fdf.h"
 
 int	all_points_visible(t_data *data)
@@ -14,6 +26,7 @@ int	all_points_visible(t_data *data)
 		&& data->borders.min_y + data->offset_y > 0 + 50);
 }
 
+//calculates the min/max x/y values after isometric calculation
 void	get_borders(t_data *data)
 {
 	int	x;
@@ -42,6 +55,7 @@ void	get_borders(t_data *data)
 	}
 }
 
+//calculates the offsets by doing: middle screen - middle object
 void	set_offset(t_data *data)
 {
 	int	screen_center_x;

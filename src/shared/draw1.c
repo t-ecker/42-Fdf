@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   draw1.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/31 15:20:14 by tecker            #+#    #+#             */
+/*   Updated: 2024/05/31 15:20:15 by tecker           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../fdf.h"
 
 void	draw_line(t_data *data, int color)
@@ -43,8 +55,6 @@ void	isometric(int *x, int *y, int z, t_data *data)
 
 void	draw_map_operations(int x, int y, t_data *data)
 {
-	if (x == 0 && y == 0 && data->offset_x == 0)
-		set_offset(data);
 	data->point.x0 = x * data->zoom;
 	data->point.y0 = y * data->zoom;
 	isometric(&data->point.x0, &data->point.y0, data->map.z[y][x], data);

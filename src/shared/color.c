@@ -1,5 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   color.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/31 15:20:10 by tecker            #+#    #+#             */
+/*   Updated: 2024/05/31 15:36:32 by tecker           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../fdf.h"
 
+//extracts the colors from start/end color
+//calculates the change in color change
+// and multiplies it times t to the start_color
+//merges each individual color bag together to a rgb color
 int	calc_color(t_data *data, float t)
 {
 	int	r;
@@ -18,6 +34,8 @@ int	calc_color(t_data *data, float t)
 	return ((r << 16) | (g << 8) | b);
 }
 
+//calc a percentage that is based on how high the z is in the range of z
+// t = float between 0 and 1. 0 would be min_z 1 would be max_z
 int	calc_perc_color(t_data *data, int current_z, int neighbor_z, int b)
 {
 	int		range;

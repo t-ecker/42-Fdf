@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils1.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/31 15:20:31 by tecker            #+#    #+#             */
+/*   Updated: 2024/05/31 17:04:21 by tecker           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../fdf.h"
 
 int	ft_xtoi(char *str)
@@ -62,10 +74,10 @@ void	freedoublearray_int(int **array, t_data *data)
 
 int	handle_close(t_data *data)
 {
-	if (data->mlx_win)
-		mlx_destroy_window(data->mlx, data->mlx_win);
 	if (data->img)
 		mlx_destroy_image(data->mlx, data->img);
+	if (data->mlx_win)
+		mlx_destroy_window(data->mlx, data->mlx_win);
 	freedoublearray_int(data->map.z, data);
 	freedoublearray_int(data->color.map_color, data);
 	exit(0);

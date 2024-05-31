@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fdf.h                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/31 15:20:41 by tecker            #+#    #+#             */
+/*   Updated: 2024/05/31 15:20:42 by tecker           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FDF_H
 # define FDF_H
 
@@ -10,8 +22,8 @@
 # include <math.h>
 # include <limits.h>
 
-# define WIDTH			1312
-# define HEIGHT 		848
+# define WIDTH			1920
+# define HEIGHT 		1080
 
 typedef struct s_color
 {
