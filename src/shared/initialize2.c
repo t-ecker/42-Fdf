@@ -6,8 +6,8 @@ void	find_min_max_z(t_data *data)
 	int	x;
 
 	y = 0;
-	data->map.min_z = data->map.z[0][0];
-	data->map.max_z = data->map.z[0][0];
+	data->map.min_z = INT_MAX;
+	data->map.max_z = INT_MIN;
 	while (y < data->map.y)
 	{
 		x = 0;

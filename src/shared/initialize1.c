@@ -16,7 +16,9 @@ int	read_z_and_color(t_data *data, char *str, int j, int i)
 		c = ft_substr(str, start_pos, len);
 		if (c == NULL)
 			return (0);
-		data->color.map_color[i][j] = ft_xtoi(c, data);
+		data->color.map_color[i][j] = ft_xtoi(c);
+		if (data->color.map_color[i][j] == 0)
+			return (0);
 		free(c);
 	}
 	data->map.z[i][j] = ft_atoi(str);

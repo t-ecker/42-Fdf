@@ -99,7 +99,7 @@ void	print_error_exit(char *str, t_data *data);
 int		ft_abs(int n);
 int		ft_is_format(char *str, char *format);
 int		ft_is_readable(char *file);
-int		ft_xtoi(char *str, t_data *data);
+int		ft_xtoi(char *str);
 
 // initialize
 void	find_min_max_z(t_data *data);

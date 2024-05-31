@@ -1,6 +1,6 @@
 #include "../fdf.h"
 
-int	ft_xtoi(char *str, t_data *data)
+int	ft_xtoi(char *str)
 {
 	int	i;
 	int	num;
@@ -18,8 +18,11 @@ int	ft_xtoi(char *str, t_data *data)
 			num += str[i] - 'A' + 10;
 		else if (str[i] >= 'a' && str[i] <= 'f')
 			num += str[i] - 'a' + 10;
-		else if (str[i] != '\n')
-			print_error_exit("Invalid hexadecimal character", data);
+		else
+		{
+			write(1, "Invalid hexadecimal character\n", 30);
+			return (0);
+		}
 		i++;
 	}
 	return (num);
@@ -29,6 +32,8 @@ void	freedoublearray(char **array)
 {
 	int	i;
 
+	if (!array)
+		return ;
 	i = 0;
 	while (array[i])
 	{
