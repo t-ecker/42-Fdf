@@ -6,7 +6,7 @@
 /*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:19:54 by tecker            #+#    #+#             */
-/*   Updated: 2024/05/31 15:19:55 by tecker           ###   ########.fr       */
+/*   Updated: 2024/05/31 22:26:54 by tecker           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,16 @@ void	change_perspective(t_data *data)
 		data->perspective++;
 	else
 		data->perspective--;
-	set_offset(data);
+	draw_start(data);
+}
+
+void	change_z(t_data *data)
+{
+	if (data->height == 2)
+		data->height = data->zoom;
+	else
+		data->height = 2;
+	draw_start(data);
 }
 
 int	key_press(int key, t_data *data)
@@ -58,6 +67,8 @@ int	key_press(int key, t_data *data)
 		change_color(data);
 	else if (key == 35)
 		change_perspective(data);
+	else if (key == 6)
+		return (change_z(data), 0);
 	return (draw(data), 0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:35 by tecker            #+#    #+#             */
-/*   Updated: 2024/05/31 15:20:36 by tecker           ###   ########.fr       */
+/*   Updated: 2024/05/31 22:14:39 by tecker           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,13 @@ int	get_size(char **array)
 	while (array[length] != NULL)
 		length++;
 	return (length);
+}
+
+void	remove_newline(char *str)
+{
+	int	len;
+
+	len = ft_strlen(str);
+	if (len > 0 && str[len - 1] == '\n')
+		str[len - 1] = '\0';
 }

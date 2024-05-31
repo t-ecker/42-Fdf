@@ -6,7 +6,7 @@
 /*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:41 by tecker            #+#    #+#             */
-/*   Updated: 2024/05/31 15:20:42 by tecker           ###   ########.fr       */
+/*   Updated: 2024/05/31 22:15:33 by tecker           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,9 +103,10 @@ void	change_color(t_data *data);
 void	change_perspective(t_data *data);
 
 // utils
+void	remove_newline(char *str);
 int		get_size(char **array);
 void	freedoublearray(char **array);
-void	freedoublearray_int(int **array, t_data *data);
+void	freedoublearray_int(int **array, int len);
 int		handle_close(t_data *data);
 void	print_error_exit(char *str, t_data *data);
 int		ft_abs(int n);
@@ -114,6 +115,7 @@ int		ft_is_readable(char *file);
 int		ft_xtoi(char *str);
 
 // initialize
+int		check_x(t_data *data);
 void	find_min_max_z(t_data *data);
 void	init_values(t_data *data);
 int		read_z_and_color(t_data *data, char *str, int j, int i);

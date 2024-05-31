@@ -6,7 +6,7 @@
 /*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:31 by tecker            #+#    #+#             */
-/*   Updated: 2024/05/31 17:04:21 by tecker           ###   ########.fr       */
+/*   Updated: 2024/05/31 22:04:48 by tecker           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,20 +55,21 @@ void	freedoublearray(char **array)
 	free(array);
 }
 
-void	freedoublearray_int(int **array, t_data *data)
+void	freedoublearray_int(int **array, int len)
 {
 	int	i;
 
-	if (array)
+	if (array != NULL)
 	{
 		i = 0;
-		while (i < data->map.y)
+		while (i < len)
 		{
-			if (array[i])
+			if (array[i] != NULL)
 				free(array[i]);
 			i++;
 		}
 		free(array);
+		array = NULL;
 	}
 }
 
@@ -78,8 +79,8 @@ int	handle_close(t_data *data)
 		mlx_destroy_image(data->mlx, data->img);
 	if (data->mlx_win)
 		mlx_destroy_window(data->mlx, data->mlx_win);
-	freedoublearray_int(data->map.z, data);
-	freedoublearray_int(data->color.map_color, data);
+	freedoublearray_int(data->map.z, data->map.y);
+	freedoublearray_int(data->color.map_color, data->map.y);
 	exit(0);
 }
 

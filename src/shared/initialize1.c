@@ -6,7 +6,7 @@
 /*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:24 by tecker            #+#    #+#             */
-/*   Updated: 2024/05/31 15:20:25 by tecker           ###   ########.fr       */
+/*   Updated: 2024/05/31 22:18:21 by tecker           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,18 @@ int	allocate_map_rows(t_data *data, char *line, int i)
 	int		j;
 
 	j = 0;
+	remove_newline(line);
 	split = ft_split(line, ' ');
 	if (!split)
 		return (1);
+	free(line);
 	data->map.x = get_size(split);
-	data->map.z[i] = (int *)malloc(data->map.x * sizeof(int));
+	if (check_x(data) == 1)
+		return (freedoublearray(split), 1);
+	data->map.z[i] = (int *)ft_calloc(data->map.x, sizeof(int));
 	if (!data->map.z[i])
 		return (freedoublearray(split), 1);
-	data->color.map_color[i] = (int *)malloc(data->map.x * sizeof(int));
+	data->color.map_color[i] = (int *)ft_calloc(data->map.x, sizeof(int));
 	if (!data->color.map_color[i])
 		return (freedoublearray(split), 1);
 	while (j < data->map.x)
@@ -77,10 +81,8 @@ void	read_map(t_data *data, char **argv)
 	{
 		if (1 == allocate_map_rows(data, line, i))
 		{
-			free(line);
 			print_error_exit("Read_map failed", data);
 		}
-		free(line);
 		i++;
 		line = get_next_line(fd);
 	}
@@ -103,10 +105,10 @@ void	process_map(t_data *data, char **argv)
 		line = get_next_line(fd);
 	}
 	close(fd);
-	data->map.z = (int **)malloc(data->map.y * sizeof(int *));
+	data->map.z = (int **)ft_calloc(data->map.y, sizeof(int *));
 	if (!data->map.z)
 		print_error_exit("Error allocating memory for map.z", data);
-	data->color.map_color = (int **)malloc(data->map.y * sizeof(int *));
+	data->color.map_color = (int **)ft_calloc(data->map.y, sizeof(int *));
 	if (!data->color.map_color)
 		print_error_exit("Error allocating memory for color", data);
 	read_map(data, argv);

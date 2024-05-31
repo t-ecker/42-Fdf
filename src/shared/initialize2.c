@@ -6,7 +6,7 @@
 /*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:27 by tecker            #+#    #+#             */
-/*   Updated: 2024/05/31 15:20:28 by tecker           ###   ########.fr       */
+/*   Updated: 2024/05/31 22:20:03 by tecker           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,14 @@ void	init_values(t_data *data)
 	data->img = NULL;
 	data->addr = NULL;
 	data->height = 2;
+}
+
+int	check_x(t_data *data)
+{
+	static int	prev_x = -1;
+
+	if (prev_x != -1 && prev_x != data->map.x)
+		return (write(1, "map has wrong format!\n", 22), 1);
+	prev_x = data->map.x;
+	return (0);
 }
