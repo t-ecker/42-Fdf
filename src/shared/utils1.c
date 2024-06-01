@@ -6,7 +6,7 @@
 /*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:31 by tecker            #+#    #+#             */
-/*   Updated: 2024/05/31 22:04:48 by tecker           ###   ########.fr       */
+/*   Updated: 2024/06/01 11:54:16 by tecker           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,12 @@ int	handle_close(t_data *data)
 
 void	print_error_exit(char *str, t_data *data)
 {
-	perror(str);
-	handle_close(data);
+	ft_putstr_fd(str, 2);
+	if (data->img)
+		mlx_destroy_image(data->mlx, data->img);
+	if (data->mlx_win)
+		mlx_destroy_window(data->mlx, data->mlx_win);
+	freedoublearray_int(data->map.z, data->map.y);
+	freedoublearray_int(data->color.map_color, data->map.y);
+	exit(1);
 }

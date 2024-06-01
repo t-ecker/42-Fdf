@@ -6,7 +6,7 @@
 /*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:24 by tecker            #+#    #+#             */
-/*   Updated: 2024/05/31 22:18:21 by tecker           ###   ########.fr       */
+/*   Updated: 2024/06/01 11:56:27 by tecker           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,14 +74,14 @@ void	read_map(t_data *data, char **argv)
 
 	fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
-		print_error_exit("Error opening file", data);
+		print_error_exit("Error opening file\n", data);
 	i = 0;
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
 		if (1 == allocate_map_rows(data, line, i))
 		{
-			print_error_exit("Read_map failed", data);
+			print_error_exit("Reading map failed\n", data);
 		}
 		i++;
 		line = get_next_line(fd);
@@ -96,7 +96,7 @@ void	process_map(t_data *data, char **argv)
 
 	fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
-		print_error_exit("Error opening file", data);
+		print_error_exit("Error opening file\n", data);
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
@@ -107,10 +107,10 @@ void	process_map(t_data *data, char **argv)
 	close(fd);
 	data->map.z = (int **)ft_calloc(data->map.y, sizeof(int *));
 	if (!data->map.z)
-		print_error_exit("Error allocating memory for map.z", data);
+		print_error_exit("Error allocating memory for map.z\n", data);
 	data->color.map_color = (int **)ft_calloc(data->map.y, sizeof(int *));
 	if (!data->color.map_color)
-		print_error_exit("Error allocating memory for color", data);
+		print_error_exit("Error allocating memory for color\n", data);
 	read_map(data, argv);
 }
 
@@ -119,17 +119,17 @@ void	init_data(t_data *data, char **argv)
 	init_values(data);
 	data->mlx = mlx_init();
 	if (data->mlx == NULL)
-		print_error_exit("mlx_init failed", data);
+		print_error_exit("mlx_init failed\n", data);
 	data->mlx_win = mlx_new_window(data->mlx, WIDTH, HEIGHT, "fdf");
 	if (data->mlx_win == NULL)
-		print_error_exit("mlx_new_window failed", data);
+		print_error_exit("mlx_new_window failed\n", data);
 	data->img = mlx_new_image(data->mlx, WIDTH, HEIGHT);
 	if (data->img == NULL)
-		print_error_exit("mlx_new_image failed", data);
+		print_error_exit("mlx_new_image failed\n", data);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel,
 			&data->line_length, &data->endian);
 	if (data->addr == NULL)
-		print_error_exit("mlx_get_data_addr failed", data);
+		print_error_exit("mlx_get_data_addr failed\n", data);
 	process_map(data, argv);
 	find_min_max_z(data);
 }

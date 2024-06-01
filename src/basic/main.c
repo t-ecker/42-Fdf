@@ -6,7 +6,7 @@
 /*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:19:45 by tecker            #+#    #+#             */
-/*   Updated: 2024/06/01 11:37:05 by tecker           ###   ########.fr       */
+/*   Updated: 2024/06/01 12:00:15 by tecker           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,17 @@ void	check_args(int argc, char **argv)
 {
 	if (argc != 2)
 	{
-		perror("Wrong arguments");
+		ft_putstr_fd("Wrong arguments\n", 2);
 		exit(1);
 	}
 	else if (ft_is_format(argv[1], ".fdf") == 0)
 	{
-		perror("Wrong format");
+		ft_putstr_fd("Wrong arguments\n", 2);
 		exit(1);
 	}
 	else if (ft_is_readable(argv[1]) == 0)
 	{
-		perror("Read Error");
+		ft_putstr_fd("Wrong arguments\n", 2);
 		exit(1);
 	}
 }
