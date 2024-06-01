@@ -6,7 +6,7 @@
 #    By: tecker <tecker@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/31 15:20:52 by tecker            #+#    #+#              #
-#    Updated: 2024/05/31 22:32:17 by tecker           ###   ########.fr        #
+#    Updated: 2024/06/01 11:30:37 by tecker           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,9 +34,9 @@ OBJ_SHARED  = $(patsubst $(SRC_DIR)/shared/%.c, $(OBJ_DIR)/%.o, $(SRC_SHARED))
 NAME        = fdf
 NAME_BONUS	= fdf_bonus
 
-all: $(NAME)
+all: $(MLX) $(NAME)
 
-bonus: $(NAME_BONUS)
+bonus: $(MLX) $(NAME_BONUS)
 
 $(NAME): $(OBJ_basic) $(OBJ_SHARED) $(MLX) $(LIBFT)
 	$(CC) $(CFLAGS) $(FRAMEWORKS) -o $@ $^ 
@@ -45,6 +45,7 @@ $(NAME_BONUS):	$(OBJ_BONUS) $(OBJ_SHARED) $(MLX) $(LIBFT)
 	$(CC) $(CFLAGS) $(FRAMEWORKS) -o $@ $^
 
 $(MLX):
+	@tar -xvf maps_and_mlx
 	@make -C $(MLX_DIR)
 
 $(LIBFT):
@@ -69,6 +70,7 @@ clean:
 
 fclean: clean
 	rm -f $(NAME) $(NAME_BONUS)
+	rm -rf mlx maps
 	make fclean -C $(LIBFT_DIR)
 
 re: fclean all
