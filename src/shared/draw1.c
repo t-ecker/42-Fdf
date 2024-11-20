@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   draw1.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:14 by tecker            #+#    #+#             */
-/*   Updated: 2024/05/31 15:20:15 by tecker           ###   ########.fr       */
+/*   Updated: 2024/11/20 21:58:43 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../fdf.h"
+#include "../../fdf.h"
 
 void	draw_line(t_data *data, int color)
 {

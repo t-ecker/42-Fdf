@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   initialize2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:27 by tecker            #+#    #+#             */
-/*   Updated: 2024/05/31 22:20:03 by tecker           ###   ########.fr       */
+/*   Updated: 2024/11/20 21:58:49 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../fdf.h"
+#include "../../fdf.h"
 
 void	find_min_max_z(t_data *data)
 {

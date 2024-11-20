@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   initialize1.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:24 by tecker            #+#    #+#             */
-/*   Updated: 2024/06/01 11:56:27 by tecker           ###   ########.fr       */
+/*   Updated: 2024/11/20 21:58:47 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../fdf.h"
+#include "../../fdf.h"
 
 int	read_z_and_color(t_data *data, char *str, int j, int i)
 {
