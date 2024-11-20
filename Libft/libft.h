@@ -6,7 +6,7 @@
 /*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 19:30:07 by tecker            #+#    #+#             */
-/*   Updated: 2024/05/13 20:18:42 by tecker           ###   ########.fr       */
+/*   Updated: 2024/11/20 13:18:18 by tecker           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,13 @@
 # include <unistd.h>
 # include <stdlib.h>
 
-struct s_Node
+typedef struct s_list
 {
-	int				value;
-	int				pos;
-	struct s_Node	*next;
-};
-typedef struct s_Node	t_node;
+	void			*content;
+	struct s_list	*next;
+}				t_list;
 
-long		ft_atoi(const char *str);
+int			ft_atoi(const char *str);
 void		*ft_bzero(void *str, size_t len);
 void		*ft_calloc(size_t count, size_t size);
 int			ft_isalnum(int c);
@@ -60,16 +58,21 @@ char		*ft_substr(char const *s, unsigned int start, size_t len);
 int			ft_tolower(int c);
 int			ft_toupper(int c);
 
-void		ft_lstiter(t_node *lst, void (*f)(int));
-void		ft_lstadd_back(t_node **lst, t_node *new);
-void		ft_lstclear(t_node **lst, void (*del)(int));
-void		ft_lstdelone(t_node *lst, void (*del)(int));
-void		ft_lstiter(t_node *lst, void (*f)(int));
-t_node		*ft_lstlast(t_node *lst);
-t_node		*ft_lstnew(int content);
-int			ft_lstsize(t_node *lst);
-void		ft_lstadd_front(t_node **lst, t_node *new);
-t_node		*ft_lstmap(t_node *lst, void *(*f)(int), void (*del)(int));
+//bonus
+void		ft_lstiter(t_list *lst, void (*f)(void *));
+void		ft_lstadd_back(t_list **lst, t_list *new);
+void		ft_lstclear(t_list **lst, void (*del)(void *));
+void		ft_lstdelone(t_list *lst, void (*del)(void *));
+void		ft_lstiter(t_list *lst, void (*f)(void *));
+t_list		*ft_lstlast(t_list *lst);
+t_list		*ft_lstnew(void *content);
+int			ft_lstsize(t_list *lst);
+void		ft_lstadd_front(t_list **lst, t_list *new);
+t_list		*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
+
+
+//extra
 char		*get_next_line(int fd);
+int			ft_printf(const char *a, ...);
 
 #endif

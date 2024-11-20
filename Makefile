@@ -6,7 +6,7 @@
 #    By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/31 15:20:52 by tecker            #+#    #+#              #
-#    Updated: 2024/11/20 22:03:22 by tomecker         ###   ########.fr        #
+#    Updated: 2024/11/20 22:08:50 by tomecker         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -120,8 +120,8 @@ all: $(NAME)
 $(NAME): $(MLX) $(LIBFT) $(OBJ_FILES) $(OBJ_FILES_SHARED)
 	$(CC) $(CFLAGS) $(FRAMEWORKS) $^ -o $@
 
-$(LIBFT):	
-	@make -C $(LIBFT_DIR)
+$(LIBFT):	$(LIBFT_DIR)/.git
+	@make extra -C $(LIBFT_DIR)
 
 $(LIBFT_DIR)/.git:
 	@echo "\033[33mInitializing Libft submodule...\033[0m"
