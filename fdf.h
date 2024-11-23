@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:41 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/20 21:58:18 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/23 14:33:55 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <fcntl.h>
-# include "mlx/mlx.h"
 # include "libft/libft.h"
 # include <math.h>
 # include <limits.h>
