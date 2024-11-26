@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:24 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/26 01:31:11 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/26 21:40:55 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,12 +115,12 @@ void	process_map(t_data *data, char **argv)
 		line = get_next_line(fd);
 	}
 	close(fd);
-	data->map.points = (t_point **)ft_calloc(data->map.y, sizeof(t_point *));
+	data->map.points = (t_points **)ft_calloc(data->map.y, sizeof(t_points *));
 	if (!data->map.points)
 		print_error_exit("Error allocating memory for map.points\n", data);
 	while (i < data->map.y)
 	{
-		data->map.points[i] = (t_point *)ft_calloc(data->map.x, sizeof(t_point));
+		data->map.points[i] = (t_points *)ft_calloc(data->map.x, sizeof(t_points));
 		if (!data->map.points[i++])
 			print_error_exit("Error allocating memory for map.points\n", data);
 	}
@@ -139,10 +139,6 @@ void	init_data(t_data *data, char **argv)
 	data->mlx.mlx = mlx_init(WIDTH, HEIGHT, title, 1);
 	if (!data->mlx.mlx)
 		print_error_exit("mlx init failed\n", data);
-	data->mlx.bg = mlx_new_image(data->mlx.mlx, WIDTH, HEIGHT);
-	if (!data->mlx.bg
-		|| (mlx_image_to_window(data->mlx.mlx, data->mlx.bg, 0, 0) < 0))
-		handle_close(data);
 	data->mlx.main = mlx_new_image(data->mlx.mlx, WIDTH, HEIGHT);
 	if (!data->mlx.main
 		|| (mlx_image_to_window(data->mlx.mlx, data->mlx.main, 0, 0) < 0))

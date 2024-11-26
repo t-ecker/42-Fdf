@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:41 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/26 02:16:10 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/26 23:27:19 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@
 
 typedef struct s_color
 {
-	int	start_color;
-	int	end_color;
 	int	r_s;
 	int	r_e;
 	int	g_s;
@@ -53,7 +51,7 @@ typedef struct s_points
 	int y;
 	int z;
 	int color;
-}			t_point;
+}			t_points;
 
 typedef struct s_two_points
 {
@@ -78,8 +76,8 @@ typedef struct s_map
 {
 	int				x;
 	int				y;
-	t_point			**points;
-	int color;
+	t_points		**points;
+	int 			color;
 	int				max_z;
 	int				min_z;
 }			t_map;
@@ -87,27 +85,20 @@ typedef struct s_map
 typedef struct s_mlx
 {
 	mlx_t		*mlx;
-	mlx_image_t	*bg;
 	mlx_image_t	*main;
 }			t_mlx;
 
 typedef struct s_data
 {
-	// void			*mlx;
-	// void			*mlx_win;
-	// void			*img;
-	// char			*addr;
-	// int				bits_per_pixel;
-	// int				line_length;
-	// int				endian;
 	int				offset_x;
 	int				offset_y;
 	int				zoom;
 	int				perspective;
 	float			rotation;
-	int				height;
+	double			height;
+	int				start_color;
+	int				end_color;
 	t_map			map;
-	t_two_points	p;
 	t_color			color;
 	t_borders		borders;
 	t_mlx			mlx;
@@ -131,7 +122,7 @@ int		ft_is_format(char *str, char *format);
 int		ft_is_readable(char *file);
 int		ft_xtoi(char *str);
 char 	*join_color(char *str);
-void	freedoublearray_point(t_point **array, int len);
+void	freedoublearray_point(t_points **array, int len);
 
 // initialize
 void	find_min_max_z(t_data *data);
@@ -148,7 +139,6 @@ int		get_color(t_data *data, int x, int y, int b);
 // draw
 void	my_put_pixel(mlx_image_t *img, int x, int y, int color);
 void	print_background(t_data *data);
-void	draw_line(t_data *data, int color);
 void	isometric(int *x, int *y, int z, t_data *data);
 void	draw_map_operations(int x, int y, t_data *data);
 void	draw_map(t_data *data);

@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:19 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/26 02:31:23 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/26 21:06:32 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,7 @@ void	draw_start(t_data *data)
 {
 	while (!all_points_visible(data) && data->zoom > 1)
 		data->zoom--;
-	print_background(data);
-	draw_map(data);
+	draw(data);
 }
 
 void	draw(void *param)
@@ -45,9 +44,6 @@ void	draw(void *param)
 	t_data	*data;
 
 	data = (t_data *)param;
-	write(1, "yy\n", 3);
-	clear_image(data->mlx.bg);
-	clear_image(data->mlx.main);
 	print_background(data);
 	draw_map(data);
 }
@@ -63,7 +59,7 @@ void	print_background(t_data *data)
 		j = 0;
 		while (j < WIDTH)
 		{
-			my_put_pixel(data->mlx.bg, j, i, 0x424242FF);
+			my_put_pixel(data->mlx.main, j, i, 0x424242FF);
 			j++;
 		}
 		i++;

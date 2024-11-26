@@ -6,28 +6,28 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:14 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/26 01:40:33 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/26 23:36:02 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../fdf.h"
 
-void	draw_line(t_data *data, int color)
+void	draw_line(t_data *data, t_two_points p, int color)
 {
 	t_line	line;
 	int		i;
 
 	i = 0;
-	line.dy = data->p.y1 - data->p.y0;
-	line.dx = data->p.x1 - data->p.x0;
+	line.dy = p.y1 - p.y0;
+	line.dx = p.x1 - p.x0;
 	if (ft_abs(line.dx) > ft_abs(line.dy))
 		line.steps = ft_abs(line.dx);
 	else
 		line.steps = ft_abs(line.dy);
 	line.x_inc = (float)line.dx / line.steps;
 	line.y_inc = (float)line.dy / line.steps;
-	line.x = (float)data->p.x0;
-	line.y = (float)data->p.y0;
+	line.x = (float)p.x0;
+	line.y = (float)p.y0;
 	while (i <= line.steps)
 	{
 		my_put_pixel(data->mlx.main, (int)round(line.x), (int)round(line.y), color);
@@ -49,33 +49,35 @@ void	isometric(int *x, int *y, int z, t_data *data)
 		prev_x = *x;
 		prev_y = *y;
 		*x = (prev_x - prev_y) * cos(data->rotation);
-		*y = (prev_x + prev_y) * sin(data->rotation) - (data->height * z);
+		*y = (prev_x + prev_y) * sin(data->rotation) - (z * data->zoom * data->height);
 	}
 }
 
 void	draw_map_operations(int x, int y, t_data *data)
 {
-	data->p.x0 = x * data->zoom;
-	data->p.y0 = y * data->zoom;
-	isometric(&data->p.x0, &data->p.y0, data->map.points[y][x].z, data);
-	add_offset(&data->p.x0, &data->p.y0, data);
+	t_two_points p;
+	
+	p.x0 = x * data->zoom;
+	p.y0 = y * data->zoom;
+	isometric(&p.x0, &p.y0, data->map.points[y][x].z, data);
+	add_offset(&p.x0, &p.y0, data);
 	if (x < data->map.x - 1)
 	{
-		data->p.x1 = (x + 1) * data->zoom;
-		data->p.y1 = y * data->zoom;
-		isometric(&data->p.x1, &data->p.y1,
+		p.x1 = (x + 1) * data->zoom;
+		p.y1 = y * data->zoom;
+		isometric(&p.x1, &p.y1,
 			data->map.points[y][x + 1].z, data);
-		add_offset(&data->p.x1, &data->p.y1, data);
-		draw_line(data, get_color(data, x, y, 1));
+		add_offset(&p.x1, &p.y1, data);
+		draw_line(data, p, get_color(data, x, y, 1));
 	}
 	if (y < data->map.y - 1)
 	{
-		data->p.x1 = x * data->zoom;
-		data->p.y1 = (y + 1) * data->zoom;
-		isometric(&data->p.x1, &data->p.y1,
+		p.x1 = x * data->zoom;
+		p.y1 = (y + 1) * data->zoom;
+		isometric(&p.x1, &p.y1,
 			data->map.points[y + 1][x].z, data);
-		add_offset(&data->p.x1, &data->p.y1, data);
-		draw_line(data, get_color(data, x, y, 0));
+		add_offset(&p.x1, &p.y1, data);
+		draw_line(data, p, get_color(data, x, y, 0));
 	}
 }
 

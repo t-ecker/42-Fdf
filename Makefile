@@ -6,7 +6,7 @@
 #    By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/31 15:20:52 by tecker            #+#    #+#              #
-#    Updated: 2024/11/26 01:47:11 by tomecker         ###   ########.fr        #
+#    Updated: 2024/11/26 21:04:28 by tomecker         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -80,9 +80,9 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 bonus:	$(NAME_BONUS)
-	clear;
-	@$(MAKE) loading
-	clear;
+# clear;
+# @$(MAKE) loading
+# clear;
 
 $(NAME_BONUS):	$(MLX) $(LIBFT) $(OBJ_FILES_BONUS) $(OBJ_FILES_SHARED)
 	$(CC) $(CFLAGS) $(LIBS) $^ -o $@

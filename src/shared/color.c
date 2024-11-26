@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:10 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/26 02:08:01 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/26 21:38:11 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,27 +18,24 @@
 //merges each individual color bag together to a rgb color
 int	calc_color(t_data *data, float t)
 {
-	int	r, g, b, a;
+	int	r;
+	int	g;
+	int	b;
+	int	a;
+	t_color color;
 
-	// Extract RGBA components for the start color
-	data->color.r_s = (data->color.start_color >> 24) & 0xFF;
-	data->color.g_s = (data->color.start_color >> 16) & 0xFF;
-	data->color.b_s = (data->color.start_color >> 8) & 0xFF;
-	data->color.a_s = data->color.start_color & 0xFF;
-
-	// Extract RGBA components for the end color
-	data->color.r_e = (data->color.end_color >> 24) & 0xFF;
-	data->color.g_e = (data->color.end_color >> 16) & 0xFF;
-	data->color.b_e = (data->color.end_color >> 8) & 0xFF;
-	data->color.a_e = data->color.end_color & 0xFF;
-
-	// Interpolate each component
-	r = data->color.r_s + t * (data->color.r_e - data->color.r_s);
-	g = data->color.g_s + t * (data->color.g_e - data->color.g_s);
-	b = data->color.b_s + t * (data->color.b_e - data->color.b_s);
-	a = data->color.a_s + t * (data->color.a_e - data->color.a_s);
-
-	// Combine components into a single RGBA value
+	color.r_s = (data->start_color >> 24) & 0xFF;
+	color.g_s = (data->start_color >> 16) & 0xFF;
+	color.b_s = (data->start_color >> 8) & 0xFF;
+	color.a_s = data->start_color & 0xFF;
+	color.r_e = (data->end_color >> 24) & 0xFF;
+	color.g_e = (data->end_color >> 16) & 0xFF;
+	color.b_e = (data->end_color >> 8) & 0xFF;
+	color.a_e = data->end_color & 0xFF;
+	r = color.r_s + t * (color.r_e - color.r_s);
+	g = color.g_s + t * (color.g_e - color.g_s);
+	b = color.b_s + t * (color.b_e - color.b_s);
+	a = color.a_s + t * (color.a_e - color.a_s);
 	return ((r << 24) | (g << 16) | (b << 8) | a);
 }
 
@@ -80,11 +77,11 @@ int	get_color(t_data *data, int x, int y, int b)
 		neighbor_col = data->map.points[y + 1][x].color;
 	}
 	if (data->map.max_z == data->map.min_z)
-		return (data->color.start_color);
-	if (current_z != neighbor_z && (current_col == 0))
-		return (calc_perc_color(data, current_z, neighbor_z, 1));
+		return (data->start_color);
 	else if (current_col != 0 && neighbor_col != 0)
 		return (current_col);
+	if (current_z != neighbor_z)
+		return (calc_perc_color(data, current_z, neighbor_z, 1));
 	else
 		return (calc_perc_color(data, current_z, neighbor_z, 0));
 }
