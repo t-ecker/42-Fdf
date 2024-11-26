@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:19:54 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/20 21:59:00 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/26 02:28:41 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 void	change_color(t_data *data)
 {
-	if (data->color.start_color == 0x00E9F0)
+	if (data->color.start_color == 0x00E9F0FF)
 	{
-		data->color.start_color = 0xFF45A2;
-		data->color.end_color = 0xF5E717;
+		data->color.start_color = 0xFF45A2FF;
+		data->color.end_color = 0xF5E717FF;
 	}
 	else
 	{
-		data->color.start_color = 0x00E9F0;
-		data->color.end_color = 0xFF45A2;
+		data->color.start_color = 0x00E9F0FF;
+		data->color.end_color = 0xFF45A2FF;
 	}
 }
 
@@ -32,54 +32,70 @@ void	change_perspective(t_data *data)
 		data->perspective++;
 	else
 		data->perspective--;
-	draw_start(data);
 }
 
 void	change_z(t_data *data)
 {
-	if (data->height == 2)
-		data->height = data->zoom;
-	else
-		data->height = 2;
-	draw_start(data);
+	if (mlx_is_key_down(data->mlx.mlx, MLX_KEY_LEFT_SHIFT))
+		data->height -= 0.1 * data->zoom;
+	else if (mlx_is_key_down(data->mlx.mlx, MLX_KEY_SPACE))
+		data->height += 0.1 * data->zoom;
 }
 
-int	key_press(int key, t_data *data)
+void	movement(t_data *data)
 {
-	if (key == 53)
-		handle_close(data);
-	else if (key == 123 || key == 124 || key == 125 || key == 126)
-	{
-		if (key == 123)
-			data->offset_x += 50;
-		else if (key == 124)
-			data->offset_x -= 50;
-		else if (key == 125)
-			data->offset_y -= 50;
-		else if (key == 126)
-			data->offset_y += 50;
-	}
-	else if (key == 24 && data->zoom < 200)
-		data->zoom += 1;
-	else if (key == 27 && data->zoom > 1)
-		data->zoom -= 1;
-	else if (key == 8)
-		change_color(data);
-	else if (key == 35)
-		change_perspective(data);
-	else if (key == 6)
-		return (change_z(data), 0);
-	return (draw(data), 0);
+	if (mlx_is_key_down(data->mlx.mlx, MLX_KEY_D))
+		data->offset_x += 50;
+	else if (mlx_is_key_down(data->mlx.mlx, MLX_KEY_A))
+		data->offset_x -= 50;
+	else if (mlx_is_key_down(data->mlx.mlx, MLX_KEY_W))
+		data->offset_y -= 50;
+	else if (mlx_is_key_down(data->mlx.mlx, MLX_KEY_S))
+		data->offset_y += 50;
 }
 
-int	handle_mouse_scroll(int button, int x, int y, t_data *data)
+
+void	key_press_multi(void *param)
 {
-	(void)x;
-	(void)y;
-	if (button == 4 && data->zoom > 1)
-		data->zoom -= 1;
-	else if (button == 5 && data->zoom < 200)
+	t_data	*data;
+
+	data = param;
+	
+	if (mlx_is_key_down(data->mlx.mlx, MLX_KEY_ESCAPE))
+		mlx_close_window(data->mlx.mlx);
+	if (mlx_is_key_down(data->mlx.mlx, MLX_KEY_W) || mlx_is_key_down(data->mlx.mlx, MLX_KEY_A) || mlx_is_key_down(data->mlx.mlx, MLX_KEY_S) || mlx_is_key_down(data->mlx.mlx, MLX_KEY_D))
+		movement(data);
+	else if (mlx_is_key_down(data->mlx.mlx, MLX_KEY_UP) && data->zoom < 200)
 		data->zoom += 1;
-	draw(data);
-	return (0);
+	else if (mlx_is_key_down(data->mlx.mlx, MLX_KEY_DOWN) && data->zoom > 1)
+		data->zoom -= 1;
+	else if (mlx_is_key_down(data->mlx.mlx, MLX_KEY_LEFT_SHIFT) || mlx_is_key_down(data->mlx.mlx, MLX_KEY_SPACE))
+		change_z(data);
 }
+
+void	key_press_single(struct mlx_key_data key, void *param)
+{
+	// write(1, "as\n", 3);
+	(void)param;
+	(void)key;
+	// t_data	*data;
+
+	// data = param;
+	// else if (key.key == MLX_KEY_C && key.action == MLX_PRESS)
+	// 	change_color(data);
+	// else if (key.key == MLX_KEY_P && key.action == MLX_PRESS)
+	// 	change_perspective(data);
+}
+
+
+// void	handle_mouse_scroll(double xdelta, double ydelta, void *param)
+// {
+// 	(void)xdelta;
+// 	t_data *data;
+
+// 	data = (t_data *)param;
+// 	if (ydelta > 0 && data->zoom > 1)
+// 		data->zoom -= 1;
+// 	else if (ydelta < 0 && data->zoom < 200)
+// 		data->zoom += 1;
+// }

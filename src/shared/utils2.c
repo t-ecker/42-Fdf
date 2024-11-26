@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:35 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/20 21:58:53 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/26 00:14:03 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,15 @@ void	remove_newline(char *str)
 	len = ft_strlen(str);
 	if (len > 0 && str[len - 1] == '\n')
 		str[len - 1] = '\0';
+}
+
+char *join_color(char *str)
+{
+	char *new;
+	if (ft_strlen(str) == 10)
+		return (str);
+	new = ft_strjoin(str, "FF");
+	if (!new)
+		return (NULL);
+	return (new);
 }

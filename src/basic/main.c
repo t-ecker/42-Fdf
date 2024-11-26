@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:19:45 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/20 21:59:03 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/26 01:32:57 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	check_args(int argc, char **argv)
 	}
 }
 
-int	key_press(int key, t_data *data)
+void	key_press(int key, t_data *data)
 {
 	if (key == 53)
 		handle_close(data);

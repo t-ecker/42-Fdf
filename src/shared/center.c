@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:03 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/20 21:58:32 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/26 00:38:11 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	get_borders(t_data *data)
 		{
 			iso_x = x * data->zoom;
 			iso_y = y * data->zoom;
-			isometric(&iso_x, &iso_y, data->map.z[y][x], data);
+			isometric(&iso_x, &iso_y, data->map.points[y][x].z, data);
 			if (iso_x < data->borders.min_x)
 				data->borders.min_x = iso_x;
 			if (iso_x > data->borders.max_x)

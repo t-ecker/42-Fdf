@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:31 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/20 21:58:51 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/26 02:27:34 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ int	ft_xtoi(char *str)
 
 	num = 0;
 	i = 0;
+	if (!str)
+		return (0);
 	if (str[0] == '0' && (str[1] == 'x' || str[1] == 'X'))
 		i = 2;
 	while (str[i])
@@ -31,10 +33,7 @@ int	ft_xtoi(char *str)
 		else if (str[i] >= 'a' && str[i] <= 'f')
 			num += str[i] - 'a' + 10;
 		else
-		{
-			write(1, "Invalid hexadecimal character\n", 30);
-			return (0);
-		}
+			return (ft_putendl_fd("Invalid hexadecimal character\n", 2), 0);
 		i++;
 	}
 	return (num);
@@ -55,7 +54,7 @@ void	freedoublearray(char **array)
 	free(array);
 }
 
-void	freedoublearray_int(int **array, int len)
+void	freedoublearray_point(t_point **array, int len)
 {
 	int	i;
 
@@ -75,23 +74,14 @@ void	freedoublearray_int(int **array, int len)
 
 int	handle_close(t_data *data)
 {
-	if (data->img)
-		mlx_destroy_image(data->mlx, data->img);
-	if (data->mlx_win)
-		mlx_destroy_window(data->mlx, data->mlx_win);
-	freedoublearray_int(data->map.z, data->map.y);
-	freedoublearray_int(data->color.map_color, data->map.y);
+	mlx_terminate(data->mlx.mlx);
+	freedoublearray_point(data->map.points, data->map.y);
 	exit(0);
 }
 
 void	print_error_exit(char *str, t_data *data)
 {
 	ft_putstr_fd(str, 2);
-	if (data->img)
-		mlx_destroy_image(data->mlx, data->img);
-	if (data->mlx_win)
-		mlx_destroy_window(data->mlx, data->mlx_win);
-	freedoublearray_int(data->map.z, data->map.y);
-	freedoublearray_int(data->color.map_color, data->map.y);
+	freedoublearray_point(data->map.points, data->map.y);
 	exit(1);
 }

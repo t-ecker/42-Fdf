@@ -6,7 +6,7 @@
 #    By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/31 15:20:52 by tecker            #+#    #+#              #
-#    Updated: 2024/11/23 14:37:11 by tomecker         ###   ########.fr        #
+#    Updated: 2024/11/26 01:47:11 by tomecker         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,24 +17,27 @@ LIBFT_DIR = ./libft
 LIBFT = $(LIBFT_DIR)/libft.a
 MLX_DIR = ./MLX42
 MLX	= $(MLX_DIR)/build/libmlx42.a
-LIBS			=-L/opt/homebrew/lib -lft -ldl -lglfw -pthread -lm
+LIBS			=-L/opt/homebrew/lib -L$(LIBFT_DIR) -lft -ldl -lglfw -pthread -lm
 
 CFLAGS = -Wall -Werror -Wextra
 CC = cc
 
 SRC		   =	./src/basic/main.c
 
-SRC_BONUS  =	./src/bonus/control_bonus.c \
-				./src/bonus/main_bonus.c
+SRC_BONUS  =	./src/bonus/main_bonus.c \
+				./src/bonus/control_bonus.c
+				
 
-SRC_SHARED =	./src/shared/center.c \
-				./src/shared/color.c \
-				./src/shared/utils1.c \
-				./src/shared/utils2.c \
+SRC_SHARED =	./src/shared/utils1.c \
 				./src/shared/initialize1.c \
 				./src/shared/initialize2.c \
+				./src/shared/color.c \
+				./src/shared/utils2.c \
+				./src/shared/debug.c \
 				./src/shared/draw1.c \
-				./src/shared/draw2.c
+				./src/shared/draw2.c \
+				./src/shared/center.c
+				
 
 
 OBJ_DIR = ./obj
