@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:19:54 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/26 23:34:56 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/27 11:28:00 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,16 @@ void	movement(t_data *data)
 		data->offset_y += 50;
 }
 
+void zoom_at_point(t_data *data, int change)
+{
+	data->zoom += change;
+	data->borders.max_x = INT_MIN;
+	data->borders.max_y = INT_MIN;
+	data->borders.min_x = INT_MAX;
+	data->borders.min_y = INT_MAX;
+	get_borders(data);
+	set_offset(data);
+}
 
 void	key_press_multi(void *param)
 {
@@ -64,9 +74,9 @@ void	key_press_multi(void *param)
 	if (mlx_is_key_down(data->mlx.mlx, MLX_KEY_W) || mlx_is_key_down(data->mlx.mlx, MLX_KEY_A) || mlx_is_key_down(data->mlx.mlx, MLX_KEY_S) || mlx_is_key_down(data->mlx.mlx, MLX_KEY_D))
 		movement(data);
 	else if (mlx_is_key_down(data->mlx.mlx, MLX_KEY_UP) && data->zoom < 200)
-		data->zoom += 1;
+		zoom_at_point(data, 1);
 	else if (mlx_is_key_down(data->mlx.mlx, MLX_KEY_DOWN) && data->zoom > 1)
-		data->zoom -= 1;
+		zoom_at_point(data, -1);
 	else if (mlx_is_key_down(data->mlx.mlx, MLX_KEY_LEFT_SHIFT) || mlx_is_key_down(data->mlx.mlx, MLX_KEY_SPACE))
 		change_z(data);
 }
@@ -84,15 +94,14 @@ void	key_press_single(struct mlx_key_data key, void *param)
 		change_perspective(data);
 }
 
+void	handle_mouse_scroll(double xdelta, double ydelta, void *param)
+{
+	(void)xdelta;
+	t_data *data;
 
-// void	handle_mouse_scroll(double xdelta, double ydelta, void *param)
-// {
-// 	(void)xdelta;
-// 	t_data *data;
-
-// 	data = (t_data *)param;
-// 	if (ydelta > 0 && data->zoom > 1)
-// 		data->zoom -= 1;
-// 	else if (ydelta < 0 && data->zoom < 200)
-// 		data->zoom += 1;
-// }
+	data = (t_data *)param;
+	if (ydelta > 0 && data->zoom > 5)
+		zoom_at_point(data, -5);
+	else if (ydelta < 0 && data->zoom < 200)
+		zoom_at_point(data, 5);
+}

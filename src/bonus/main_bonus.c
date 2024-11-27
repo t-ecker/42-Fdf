@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:19:59 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/26 20:58:33 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/27 10:58:03 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	ft_hook(t_data *data)
 {
 	mlx_loop_hook(data->mlx.mlx, key_press_multi, data);
 	mlx_key_hook(data->mlx.mlx, key_press_single, data);
-	// mlx_scroll_hook(data->mlx.mlx, handle_mouse_scroll, data);
+	mlx_scroll_hook(data->mlx.mlx, handle_mouse_scroll, data);
 }
 
 int	main(int argc, char *argv[])

@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:41 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/26 23:27:19 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/27 11:29:09 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ typedef struct s_data
 {
 	int				offset_x;
 	int				offset_y;
+	int				base_offset_x;
+	int				base_offset_y;
 	int				zoom;
 	int				perspective;
 	float			rotation;
@@ -105,7 +107,7 @@ typedef struct s_data
 }			t_data;
 
 // control
-// void	handle_mouse_scroll(double xdelta, double ydelta, void *param);
+void	handle_mouse_scroll(double xdelta, double ydelta, void *param);
 void	key_press_single(struct mlx_key_data key, void *param);
 void	key_press_multi(void *param);
 void	change_color(t_data *data);
@@ -152,6 +154,5 @@ int		all_points_visible(t_data *data);
 void	set_offset(t_data *data);
 
 void print_debug_map(t_data *data);
-
 
 #endif

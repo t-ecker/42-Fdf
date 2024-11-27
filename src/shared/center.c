@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:03 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/26 23:15:25 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/27 11:12:45 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ int	all_points_visible(t_data *data)
 	data->borders.min_y = INT_MAX;
 	get_borders(data);
 	set_offset(data);
-	return (data->borders.max_x + data->offset_x < WIDTH - 50
-		&& data->borders.min_x + data->offset_x > 0 + 50
-		&& data->borders.max_y + data->offset_y < HEIGHT - 50
-		&& data->borders.min_y + data->offset_y > 0 + 50);
+	return (data->borders.max_x + data->base_offset_x < WIDTH - 50
+		&& data->borders.min_x + data->base_offset_x > 0 + 50
+		&& data->borders.max_y + data->base_offset_y < HEIGHT - 50
+		&& data->borders.min_y + data->base_offset_y > 0 + 50);
 }
 
 //calculates the min/max x/y values after isometric calculation
@@ -77,12 +77,12 @@ void	set_offset(t_data *data)
 		object_center_y = data->borders.min_y
 			+ (data->borders.max_y - data->borders.min_y) / 2;
 	}
-	data->offset_x = screen_center_x - object_center_x;
-	data->offset_y = screen_center_y - object_center_y;
+	data->base_offset_x = screen_center_x - object_center_x;
+	data->base_offset_y = screen_center_y - object_center_y;
 }
 
 void	add_offset(int *x, int *y, t_data *data)
 {
-	*x += data->offset_x;
-	*y += data->offset_y;
+	*x += data->base_offset_x + data->offset_x;
+	*y += data->base_offset_y + data->offset_y;
 }
