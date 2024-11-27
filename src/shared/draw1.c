@@ -6,18 +6,43 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:14 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/26 23:36:02 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/27 20:57:24 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../fdf.h"
 
-void	draw_line(t_data *data, t_two_points p, int color)
+// void	draw_line(t_data *data, t_two_points p, int color)
+// {
+// 	t_line	line;
+// 	int		i;
+
+// 	i = 0;
+// 	line.dy = p.y1 - p.y0;
+// 	line.dx = p.x1 - p.x0;
+// 	if (ft_abs(line.dx) > ft_abs(line.dy))
+// 		line.steps = ft_abs(line.dx);
+// 	else
+// 		line.steps = ft_abs(line.dy);
+// 	line.x_inc = (float)line.dx / line.steps;
+// 	line.y_inc = (float)line.dy / line.steps;
+// 	line.x = (float)p.x0;
+// 	line.y = (float)p.y0;
+// 	while (i <= line.steps)
+// 	{
+// 		my_put_pixel(data->mlx.main, (int)round(line.x), (int)round(line.y), color);
+// 		line.x += line.x_inc;
+// 		line.y += line.y_inc;
+// 		i++;
+// 	}
+// }
+
+void	draw_line(t_data *data, t_two_points p, t_points start, t_points end)
 {
 	t_line	line;
 	int		i;
 
-	i = 0;
+	i = -1;
 	line.dy = p.y1 - p.y0;
 	line.dx = p.x1 - p.x0;
 	if (ft_abs(line.dx) > ft_abs(line.dy))
@@ -28,12 +53,15 @@ void	draw_line(t_data *data, t_two_points p, int color)
 	line.y_inc = (float)line.dy / line.steps;
 	line.x = (float)p.x0;
 	line.y = (float)p.y0;
-	while (i <= line.steps)
+	line.z_inc = (float)(end.z - start.z) / line.steps;
+	line.z = start.z;
+	while (++i <= line.steps)
 	{
-		my_put_pixel(data->mlx.main, (int)round(line.x), (int)round(line.y), color);
+		line.t = (line.z - data->map.min_z) / (data->map.max_z - data->map.min_z);
+		my_put_pixel(data->mlx.main, (int)round(line.x), (int)round(line.y), get_color(data, start, end, line.t));
 		line.x += line.x_inc;
 		line.y += line.y_inc;
-		i++;
+		line.z += line.z_inc;
 	}
 }
 
@@ -68,7 +96,7 @@ void	draw_map_operations(int x, int y, t_data *data)
 		isometric(&p.x1, &p.y1,
 			data->map.points[y][x + 1].z, data);
 		add_offset(&p.x1, &p.y1, data);
-		draw_line(data, p, get_color(data, x, y, 1));
+		draw_line(data, p, data->map.points[y][x], data->map.points[y][x + 1]);
 	}
 	if (y < data->map.y - 1)
 	{
@@ -77,9 +105,10 @@ void	draw_map_operations(int x, int y, t_data *data)
 		isometric(&p.x1, &p.y1,
 			data->map.points[y + 1][x].z, data);
 		add_offset(&p.x1, &p.y1, data);
-		draw_line(data, p, get_color(data, x, y, 0));
+		draw_line(data, p, data->map.points[y][x], data->map.points[y + 1][x]);
 	}
 }
+
 
 void	draw_map(t_data *data)
 {

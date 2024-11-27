@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:24 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/26 21:40:55 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/27 20:53:47 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ void	read_map(t_data *data, char **argv)
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
-		// remove_newline(line);
 		if (get_z_and_color(data, line, y++, x))
 		{
 			free(line);
@@ -76,16 +75,17 @@ void	check_map(t_data *data, char *str)
 	int count = 1;
 	int i = 0;
 	if (str[0] == '\n')
-		print_error_exit("wrong map (multiple newline found)\n", data);
+		print_error_exit("wrong map (multiple empty lines found)\n", data);
 	while (str[i])
 	{
 		while (str[i] && str[i] != ' ')
 			i++;
 		if (str[i] == ' ' && str[i + 1] == '\n')
-			print_error_exit("wrong map (space at the end)\n", data);
+			print_error_exit("wrong map (space at the end of a line)\n", data);
 		if (str[i] == ' ')
 		{
-			count++;
+			if (i != 0 && ft_isalnum(str[i - 1]))
+				count++;
 			while (str[i] && str[i] == ' ')
 				i++;
 		}
@@ -134,7 +134,7 @@ void	init_data(t_data *data, char **argv)
 	init_values(data);
 	process_map(data, argv);
 	find_min_max_z(data);
-	title = ft_strjoin("fdf - map: ", argv[1]);
+	title = ft_strjoin("fdf - map: ", ft_strrchr(argv[1], '/') + 1);
 	mlx_set_setting(MLX_STRETCH_IMAGE, true);
 	data->mlx.mlx = mlx_init(WIDTH, HEIGHT, title, 1);
 	if (!data->mlx.mlx)

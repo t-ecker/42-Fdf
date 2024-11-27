@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:41 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/27 11:29:09 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/27 18:49:32 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,9 @@ typedef struct s_line
 	float	y_inc;
 	float	x;
 	float	y;
+	float z_inc;
+	float z;
+	float t;
 }			t_line;
 
 typedef struct s_map
@@ -134,9 +137,8 @@ void	process_map(t_data *data, char **argv);
 void	init_data(t_data *data, char **argv);
 
 // color
-int		calc_color(t_data *data, float t);
-int		calc_perc_color(t_data *data, int current_z, int neighbor_z, int b);
-int		get_color(t_data *data, int x, int y, int b);
+int		get_color(t_data *data, t_points start, t_points end, float t);
+
 
 // draw
 void	my_put_pixel(mlx_image_t *img, int x, int y, int color);
