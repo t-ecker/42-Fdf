@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:41 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/28 21:27:29 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/28 23:36:24 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,20 +143,21 @@ int		get_color(t_data *data, t_points start, t_points end, float t);
 // draw
 void	my_put_pixel(mlx_image_t *img, int x, int y, int color);
 void	print_background(t_data *data);
-void	isometric(int *x, int *y, int z, t_data *data);
-void	draw_map_operations(int x, int y, t_data *data);
 void	draw_map(t_data *data);
 void	draw(void *param);
 void	draw_start(t_data *data);
+void isometric(t_data *data, t_two_points *p, t_points start, t_points end);
+void rotate(t_data *data, t_two_points *p);
 
 //center
-void	add_offset(int *x, int *y, t_data *data);
-void	get_borders(t_data *data);
+void	add_offset(t_data *data, t_two_points *p);
 int		all_points_visible(t_data *data);
 void	set_offset(t_data *data);
+void	get_borders(t_data *data, int y, int x);
 
 void print_debug_map(t_data *data);
-void rotate(t_data *data, int *x, int *y);
+void rotate(t_data *data, t_two_points *p);
 void	center(t_data *data);
+int is_outside(int x, int y);
 
 #endif

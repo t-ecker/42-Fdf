@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:19 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/28 21:24:11 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/29 00:23:32 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ void	draw_start(t_data *data)
 {
 	while (!all_points_visible(data) && data->zoom > 1)
 		data->zoom--;
-	draw(data);
 }
 
 void	draw(void *param)
@@ -66,8 +65,13 @@ void	print_background(t_data *data)
 	}
 }
 
+int is_outside(int x, int y)
+{
+	return (x < WIDTH && y < HEIGHT && x >= 0 && y >= 0);
+}
+
 void	my_put_pixel(mlx_image_t *img, int x, int y, int color)
 {
-	if (x < WIDTH && y < HEIGHT && x >= 0 && y >= 0)
+	if (is_outside(x, y))
 		mlx_put_pixel(img, x, y, color);
 }
