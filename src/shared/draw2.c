@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:19 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/26 21:06:32 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/28 21:24:11 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	print_background(t_data *data)
 		j = 0;
 		while (j < WIDTH)
 		{
-			my_put_pixel(data->mlx.main, j, i, 0x424242FF);
+			my_put_pixel(data->mlx.main, j, i, data->background_color);
 			j++;
 		}
 		i++;

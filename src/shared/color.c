@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:10 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/27 20:21:50 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/27 21:08:37 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,4 @@ int	get_color(t_data *data, t_points start, t_points end, float t)
 		return (calc_color(t, start.color, end.color));
 	else
 		return (calc_color(t, data->start_color, data->end_color));
-		// return (calc_perc_color(data, current_z, neighbor_z, 0));
 }

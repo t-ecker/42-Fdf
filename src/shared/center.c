@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:03 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/27 11:12:45 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/28 21:25:53 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,21 @@
 
 int	all_points_visible(t_data *data)
 {
+	center(data);
+	return (data->borders.max_x + data->base_offset_x < WIDTH - 50
+		&& data->borders.min_x + data->base_offset_x > 0 + 50
+		&& data->borders.max_y + data->base_offset_y < HEIGHT - 50
+		&& data->borders.min_y + data->base_offset_y > 0 + 50);
+}
+
+void	center(t_data *data)
+{
 	data->borders.max_x = INT_MIN;
 	data->borders.max_y = INT_MIN;
 	data->borders.min_x = INT_MAX;
 	data->borders.min_y = INT_MAX;
 	get_borders(data);
 	set_offset(data);
-	return (data->borders.max_x + data->base_offset_x < WIDTH - 50
-		&& data->borders.min_x + data->base_offset_x > 0 + 50
-		&& data->borders.max_y + data->base_offset_y < HEIGHT - 50
-		&& data->borders.min_y + data->base_offset_y > 0 + 50);
 }
 
 //calculates the min/max x/y values after isometric calculation
@@ -42,6 +47,7 @@ void	get_borders(t_data *data)
 		{
 			iso_x = x * data->zoom;
 			iso_y = y * data->zoom;
+			rotate(data, &iso_x, &iso_y);
 			isometric(&iso_x, &iso_y, data->map.points[y][x].z, data);
 			if (iso_x < data->borders.min_x)
 				data->borders.min_x = iso_x;

@@ -6,7 +6,7 @@
 #    By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/31 15:20:52 by tecker            #+#    #+#              #
-#    Updated: 2024/11/26 21:04:28 by tomecker         ###   ########.fr        #
+#    Updated: 2024/11/28 20:59:42 by tomecker         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ MLX_DIR = ./MLX42
 MLX	= $(MLX_DIR)/build/libmlx42.a
 LIBS			=-L/opt/homebrew/lib -L$(LIBFT_DIR) -lft -ldl -lglfw -pthread -lm
 
-CFLAGS = -Wall -Werror -Wextra
+# CFLAGS = -Wall -Werror -Wextra
 CC = cc
 
 SRC		   =	./src/basic/main.c

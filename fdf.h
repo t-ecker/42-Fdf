@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:41 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/27 18:49:32 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/28 21:27:29 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,13 +98,13 @@ typedef struct s_data
 	int				base_offset_x;
 	int				base_offset_y;
 	int				zoom;
-	int				perspective;
-	float			rotation;
 	double			height;
+	float 			rotation_angle;
+	int				perspective;
 	int				start_color;
 	int				end_color;
+	int 			background_color;
 	t_map			map;
-	t_color			color;
 	t_borders		borders;
 	t_mlx			mlx;
 }			t_data;
@@ -156,5 +156,7 @@ int		all_points_visible(t_data *data);
 void	set_offset(t_data *data);
 
 void print_debug_map(t_data *data);
+void rotate(t_data *data, int *x, int *y);
+void	center(t_data *data);
 
 #endif
