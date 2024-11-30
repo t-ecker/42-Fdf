@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:24 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/27 20:53:47 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/30 00:41:23 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,13 +127,32 @@ void	process_map(t_data *data, char **argv)
 	read_map(data, argv);
 }
 
+void	overlay(t_data *data)
+{
+	data->mlx.overlay = mlx_new_image(data->mlx.mlx, WIDTH, HEIGHT);
+	if (!data->mlx.overlay
+		|| (mlx_image_to_window(data->mlx.mlx, data->mlx.overlay, 0, 0) < 0))
+		handle_close(data);
+	
+	data->mlx.hover_overlay = mlx_new_image(data->mlx.mlx, WIDTH, HEIGHT);
+	if (!data->mlx.hover_overlay
+		|| (mlx_image_to_window(data->mlx.mlx, data->mlx.hover_overlay, 0, 0) < 0))
+		handle_close(data);
+	
+	data->mlx.img[0] = mlx_load_png("./img/click1.png");
+	data->mlx.img[1] = mlx_load_png("./img/click2.png");
+	data->mlx.start = mlx_load_png("./img/start.png");
+	
+	if (!data->mlx.img[0] || !data->mlx.img[1] || !data->mlx.start)
+		handle_close(data);
+	data->mlx.active = data->mlx.start;
+}
+
 void	init_data(t_data *data, char **argv)
 {
 	char *title;
 
 	init_values(data);
-	process_map(data, argv);
-	find_min_max_z(data);
 	title = ft_strjoin("fdf - map: ", ft_strrchr(argv[1], '/') + 1);
 	mlx_set_setting(MLX_STRETCH_IMAGE, true);
 	data->mlx.mlx = mlx_init(WIDTH, HEIGHT, title, 1);
@@ -143,4 +162,7 @@ void	init_data(t_data *data, char **argv)
 	if (!data->mlx.main
 		|| (mlx_image_to_window(data->mlx.mlx, data->mlx.main, 0, 0) < 0))
 		handle_close(data);
+	overlay(data);
+	process_map(data, argv);
+	find_min_max_z(data);
 }

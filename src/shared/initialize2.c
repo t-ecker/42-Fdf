@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:27 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/27 22:42:53 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/29 23:58:52 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	init_values(t_data *data)
 	data->offset_x = 0;
 	data->offset_y = 0;
 	data->start_color = 0xC3C6C3FF;
-	data->end_color = 0xf9744bFF;
+	data->end_color = 0xff8334FF;
 	data->background_color = 0x091d26FF;
 	data->map.x = 0;
 	data->map.y = 0;
@@ -49,4 +49,7 @@ void	init_values(t_data *data)
 	data->perspective = 2;
 	data->height = 1.0;
 	data->rotation_angle = 0;
+	data->is_hovered = 0;
+	data->is_clicked = 1;
+	data->start = 1;
 }

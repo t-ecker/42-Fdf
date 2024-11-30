@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:31 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/26 21:39:04 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/29 23:44:48 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	freedoublearray(char **array)
 	}
 	free(array);
 }
+
 
 void	freedoublearray_point(t_points **array, int len)
 {

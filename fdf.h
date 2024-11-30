@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:41 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/28 23:36:24 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/30 01:08:15 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,12 @@ typedef struct s_mlx
 {
 	mlx_t		*mlx;
 	mlx_image_t	*main;
+	mlx_image_t	*overlay;
+	mlx_image_t	*hover_overlay;
+	mlx_texture_t	*start;
+	mlx_texture_t	*active;
+	mlx_texture_t *img[2];
+	
 }			t_mlx;
 
 typedef struct s_data
@@ -104,6 +110,9 @@ typedef struct s_data
 	int				start_color;
 	int				end_color;
 	int 			background_color;
+	int				is_hovered;
+	int				is_clicked;
+	bool			start;
 	t_map			map;
 	t_borders		borders;
 	t_mlx			mlx;
@@ -159,5 +168,13 @@ void print_debug_map(t_data *data);
 void rotate(t_data *data, t_two_points *p);
 void	center(t_data *data);
 int is_outside(int x, int y);
+void draw_overlay(t_data *data);
+void cursor_hook(double xpos, double ypos, void* param);
+void mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* param);
+int handle_mouse(t_data *data);
+void	draw_img(mlx_image_t *img, mlx_texture_t *texture,
+		int dst_x, int dst_y);
+void	clear_image(mlx_image_t *image);
+void reset(t_data *data);
 
 #endif

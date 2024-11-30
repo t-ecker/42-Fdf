@@ -6,7 +6,7 @@
 #    By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/31 15:20:52 by tecker            #+#    #+#              #
-#    Updated: 2024/11/29 00:23:45 by tomecker         ###   ########.fr        #
+#    Updated: 2024/11/30 01:32:20 by tomecker         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ SRC_SHARED =	./src/shared/utils1.c \
 				./src/shared/debug.c \
 				./src/shared/draw1.c \
 				./src/shared/draw2.c \
+				./src/shared/overlay.c \
 				./src/shared/center.c
 				
 

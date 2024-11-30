@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:19 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/29 00:23:32 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/30 01:34:44 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,34 @@ void	clear_image(mlx_image_t *image)
 
 void	draw_start(t_data *data)
 {
-	while (!all_points_visible(data) && data->zoom > 1)
-		data->zoom--;
+	data->start = 0;
+	reset(data);
+	clear_image(data->mlx.overlay);
+	draw_overlay(data);
 }
 
 void	draw(void *param)
 {
 	t_data	*data;
+	static int old_hover = 0;
+	static int old_click = 4;
 
 	data = (t_data *)param;
-	print_background(data);
-	draw_map(data);
+	if (data->is_hovered != old_hover || data->is_clicked != old_click)
+	{
+		// printf("%i\n", data->is_hovered);
+		if (data->is_clicked == old_click)
+			clear_image(data->mlx.hover_overlay);
+		old_click = data->is_clicked;
+		old_hover = data->is_hovered;
+		if (data->mlx.active)
+			draw_img(data->mlx.overlay, data->mlx.active, 0, 0);
+	}
+	if (!data->start)
+	{
+		print_background(data);
+		draw_map(data);
+	}	
 }
 
 void	print_background(t_data *data)

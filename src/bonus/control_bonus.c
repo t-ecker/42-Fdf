@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:19:54 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/29 00:20:25 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/30 01:32:41 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,9 @@ void reset(t_data *data)
 	data->perspective = 2;
 	data->height = 1.0;
 	data->rotation_angle = 0;
+	data->is_clicked = 1;
+	data->is_hovered = 0;
+	data->mlx.active = data->mlx.img[0];
 	while (!all_points_visible(data) && data->zoom > 1)
 		data->zoom--;
 }
@@ -109,10 +112,6 @@ void	key_press_single(struct mlx_key_data key, void *param)
 		mlx_close_window(data->mlx.mlx);
 	if (key.key == MLX_KEY_C && key.action == MLX_PRESS)
 		change_color(data);
-	if (key.key == MLX_KEY_P && key.action == MLX_PRESS)
-		change_perspective(data);
-	if (key.key == MLX_KEY_R && key.action == MLX_PRESS)
-		reset(data);
 }
 
 void	handle_mouse_scroll(double xdelta, double ydelta, void *param)
@@ -125,4 +124,75 @@ void	handle_mouse_scroll(double xdelta, double ydelta, void *param)
 		data->zoom -= 5;
 	else if (ydelta < 0 && data->zoom < 200)
 		data->zoom += 5;
+}
+
+void	draw_hover_line(t_data *data, double x1, double x2, int y1)
+{
+	int x;
+	int y;
+
+	y = y1 - 3;
+	while (y < y1)
+	{
+		x = x1 - 1;
+		while (x < x2)
+		{
+			my_put_pixel(data->mlx.hover_overlay, x, y, 0xff8334FF);
+			x++;
+		}
+		y++;
+	}
+}
+
+void cursor_hook(double xpos, double ypos, void* param)
+{
+	t_data *data;
+
+	data = (t_data *)param;
+	if (data->start && (xpos >= 761.5 && xpos <= 884.5) && (ypos >= 863.0 && ypos <= 897.0))
+	{
+		data->is_hovered = 4;
+		draw_hover_line(data, 845.5, 985.5, 928);
+	}
+	else if (!data->start && (xpos >= 14.5 && xpos <= 175.5) && (ypos >= 220.5 && ypos <= 270.0))
+	{
+		data->is_hovered = 1;
+		draw_hover_line(data, 15.0, 194.0, 272);
+	}
+	else if (!data->start && (xpos >= 185.0 && xpos <= 350.0) && (ypos >= 220.5 && ypos <= 270))
+	{
+		data->is_hovered = 2;
+		draw_hover_line(data, 208.0, 387.0, 272);
+	}
+	else if (!data->start && (xpos >= 100.0 && xpos <= 260.0) && (ypos >= 867.0 && ypos <= 917))
+	{
+		data->is_hovered = 3;
+		draw_hover_line(data, 112.0, 289.0, 941);
+	}
+	else
+		data->is_hovered = 0;
+}
+
+void mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* param)
+{
+	t_data *data;
+
+	(void)mods;
+	data = (t_data *)param;
+	if (button == MLX_MOUSE_BUTTON_LEFT)
+	{
+		if (action == MLX_RELEASE && data->is_hovered != 0)
+		{
+			data->is_clicked = data->is_hovered;
+			if (data->is_clicked == 4)
+				return (draw_start(data));
+			if (data->is_clicked == 3)
+				return (reset(data));
+			if (data->is_clicked == 2)
+				data->perspective = 1;
+			else
+				data->perspective = 0;
+			data->mlx.active = data->mlx.img[data->is_clicked - 1];
+		}
+	}
 }

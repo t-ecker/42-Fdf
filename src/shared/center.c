@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:03 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/29 00:13:32 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/29 02:16:19 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	set_offset(t_data *data)
 	int	object_center_x;
 	int	object_center_y;
 
-	screen_center_x = WIDTH / 2;
+	screen_center_x = 400 + (WIDTH - 400) / 2;
 	screen_center_y = HEIGHT / 2;
 	if (data->perspective == 1)
 	{
