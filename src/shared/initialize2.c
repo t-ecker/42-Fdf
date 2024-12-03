@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:20:27 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/29 23:58:52 by tomecker         ###   ########.fr       */
+/*   Updated: 2024/11/30 11:23:07 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	init_values(t_data *data)
 	data->offset_y = 0;
 	data->start_color = 0xC3C6C3FF;
 	data->end_color = 0xff8334FF;
-	data->background_color = 0x091d26FF;
+	data->background_color = 0x262626FF;
 	data->map.x = 0;
 	data->map.y = 0;
 	data->map.points = NULL;
