@@ -10,7 +10,7 @@
 
 1. **Data Parsing**: Parsing a map file that contains the 3D coordinates of points. This data is read, stored, and prepared for rendering.
 2. **Creating the 3D Projection**: I applied mathematical transformations to convert 3D coordinates into 2D screen coordinates. This includes rotation, scaling, and translation operations.
-3. **Graphics Library**: For rendering, I used the **MiniLibX** graphics library, which is needed for creating windows, drawing shapes, and handling user input.
+3. **Graphics Library**: For rendering, I used the **[MLX42](https://github.com/codam-coding-college/MLX42)** graphics library, which is needed for creating windows, drawing shapes, and handling user input.
 4. **User Interaction**: I implemented controls for rotating the map, zooming in and out, and moving/changing the view to allow users to interact with the visualisation.
 5. **Appearance**: To enhance the visual appeal, I implemented color gradients and an Interface.
 
