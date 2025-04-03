@@ -34,6 +34,7 @@ cd fdf
 ```bash
 make bonus
 ```
+> **Note**: The "bonus" version provides the best experience
 
 ### 3️⃣ Run the Program
 
