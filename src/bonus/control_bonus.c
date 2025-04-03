@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:19:54 by tecker            #+#    #+#             */
-/*   Updated: 2024/11/30 01:32:41 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/04/03 17:25:08 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,33 +144,45 @@ void	draw_hover_line(t_data *data, double x1, double x2, int y1)
 	}
 }
 
-void cursor_hook(double xpos, double ypos, void* param)
+void check_hover_state(t_data *data, int x, int y)
 {
-	t_data *data;
-
-	data = (t_data *)param;
-	if (data->start && (xpos >= 761.5 && xpos <= 884.5) && (ypos >= 863.0 && ypos <= 897.0))
+	mlx_get_mouse_pos(data->mlx.mlx, &x, &y);
+	if (data->start && (x >= 761.5 && x <= 884.5) && (y >= 863.0 && y <= 897.0))
 	{
 		data->is_hovered = 4;
 		draw_hover_line(data, 845.5, 985.5, 928);
 	}
-	else if (!data->start && (xpos >= 14.5 && xpos <= 175.5) && (ypos >= 220.5 && ypos <= 270.0))
+	else if (!data->start && (x >= 14.5 && x <= 175.5) && (y >= 220.5 && y <= 270.0))
 	{
 		data->is_hovered = 1;
 		draw_hover_line(data, 15.0, 194.0, 272);
 	}
-	else if (!data->start && (xpos >= 185.0 && xpos <= 350.0) && (ypos >= 220.5 && ypos <= 270))
+	else if (!data->start && (x >= 185.0 && x <= 350.0) && (y >= 220.5 && y <= 270))
 	{
 		data->is_hovered = 2;
 		draw_hover_line(data, 208.0, 387.0, 272);
 	}
-	else if (!data->start && (xpos >= 100.0 && xpos <= 260.0) && (ypos >= 867.0 && ypos <= 917))
+	else if (!data->start && (x >= 100.0 && x <= 260.0) && (y >= 867.0 && y <= 917))
 	{
 		data->is_hovered = 3;
 		draw_hover_line(data, 112.0, 289.0, 941);
 	}
 	else
 		data->is_hovered = 0;
+}
+
+void cursor_hook(double xpos, double ypos, void* param)
+{
+	t_data *data;
+	int y;
+	int x;
+	(void) xpos;
+	(void) ypos;
+
+	data = (t_data *)param;
+	x = 0;
+	y = 0;
+	check_hover_state(data, x, y);
 }
 
 void mouse_hook(mouse_key_t button, action_t action, modifier_key_t mods, void* param)
