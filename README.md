@@ -1,6 +1,6 @@
 # fdf - 42 School
 
-### 🏆 Score: **125/100** (+25 for bonus)
+### 🏆 Score: **120/100** (+20 for bonus)
 
 ## 📚 About the Project
 
